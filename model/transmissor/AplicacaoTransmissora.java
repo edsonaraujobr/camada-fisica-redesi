@@ -1,12 +1,10 @@
-/*package model.transmissor;
+package model.transmissor;
 
 public class AplicacaoTransmissora {
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora = new CamadaAplicacaoTransmissora();
 
-  public void aplicacaoTransmissora () {
-    String mensagem = "Mensagem Enviada";
-    camadaAplicacaoTransmissora.enviarDado(mensagem);
-  
+  public void enviarDado (String mensagem, int tipoDeCodificacao) {
+    camadaAplicacaoTransmissora.enviarDado(mensagem, tipoDeCodificacao);
   }
   
-}*/
+}

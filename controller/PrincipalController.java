@@ -11,6 +11,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import model.transmissor.AplicacaoTransmissora;
 
 public class PrincipalController implements Initializable {
   @FXML
@@ -83,6 +84,10 @@ public class PrincipalController implements Initializable {
   
   ToggleGroup grupoRadioTipoDeCodificacao;
   
+  AplicacaoTransmissora aplicacaoTransmissora;
+  
+  int tipoDeCodificacao = -1;
+  
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     grupoRadioTipoDeCodificacao = new ToggleGroup();
@@ -96,11 +101,13 @@ public class PrincipalController implements Initializable {
   @FXML
   void handleButtonEnviar(ActionEvent event) {
     if(buttonEnviar.getText().equals("Enviar")) {
-      if(grupoRadioTipoDeCodificacao != null && !textAreaTransmissor.getText().equals("")) {
+      if(grupoRadioTipoDeCodificacao.getSelectedToggle() != null && !textAreaTransmissor.getText().equals("")) {
         labelAviso.setVisible(false);
         imageDemarcacaoSinais.setVisible(true);
-        System.out.println("Hello");
         buttonEnviar.setText("Reiniciar");
+        
+        aplicacaoTransmissora = new AplicacaoTransmissora();
+        aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao);
       } else {
         labelAviso.setVisible(true);
       }
@@ -115,17 +122,17 @@ public class PrincipalController implements Initializable {
   
   @FXML
   void handleButtonCodificacaoBinaria(ActionEvent event) {
-
+    tipoDeCodificacao = 0;
   }
 
   @FXML
   void handleButtonManchester(ActionEvent event) {
-
+    tipoDeCodificacao = 1;
   }
 
   @FXML
   void handleButtonManchesterDiferencial(ActionEvent event) {
-
+    tipoDeCodificacao = 2;
   }
   
 }
