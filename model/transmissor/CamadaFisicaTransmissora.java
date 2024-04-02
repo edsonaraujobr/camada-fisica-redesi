@@ -1,8 +1,8 @@
-/*package model.transmissor;
-import model.MeioDeComunicacao;
+package model.transmissor;
+//import model.MeioDeComunicacao;
 
 public class CamadaFisicaTransmissora {
-  MeioDeComunicacao meioDeComunicacao = new MeioDeComunicacao();
+  //MeioDeComunicacao meioDeComunicacao = new MeioDeComunicacao();
   
   public void enviarDado(String quadro){
     int tipoDeCodificacao = 0;
@@ -23,7 +23,7 @@ public class CamadaFisicaTransmissora {
         break;
         
     }
-    meioDeComunicacao.enviarDado(quadro);
+    //meioDeComunicacao.enviarDado(quadro);
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {
@@ -44,4 +44,4 @@ public class CamadaFisicaTransmissora {
     return ex;
   }
   
-}*/
+}

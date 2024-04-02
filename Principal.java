@@ -20,7 +20,6 @@ public class Principal  extends Application {
     Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
     scene = new Scene(root);
 
-    
     primaryStage.setResizable(false); // evitar Maximizar
     primaryStage.setScene(scene);
     primaryStage.setOnCloseRequest(t -> { // fechar o processo caso seja fechado a janela

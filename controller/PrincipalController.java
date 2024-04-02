@@ -94,8 +94,6 @@ public class PrincipalController implements Initializable {
     radioButtonCodificacaoBinaria.setToggleGroup(grupoRadioTipoDeCodificacao);
     radioButtonManchester.setToggleGroup(grupoRadioTipoDeCodificacao);
     radioButtonManchesterDiferencial.setToggleGroup(grupoRadioTipoDeCodificacao);
-
-
   }
   
   @FXML
