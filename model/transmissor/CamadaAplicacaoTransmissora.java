@@ -1,14 +1,16 @@
 package model.transmissor;
 
 public class CamadaAplicacaoTransmissora {
-  CamadaFisicaTransmissora camadaFisicaTransmissora = new CamadaFisicaTransmissora();
+  CamadaFisicaTransmissora camadaFisicaTransmissora;
   
   public void enviarDado(String mensagem, int tipoDeCodificacao) {
     System.out.println("A palavra é: " + mensagem);
+    
     char arrayCaracteres[] = mensagem.toCharArray();
     
     int quadro[] = new int [retornarTamanho(tipoDeCodificacao, arrayCaracteres.length)];
     String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres);
+    
     System.out.println("String de Bits antes: " + stringDeBits);
     System.out.println("quadro length: " + quadro.length);
     
@@ -17,6 +19,7 @@ public class CamadaAplicacaoTransmissora {
       
       if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
         stringDeBits = removerBitsLidos(stringDeBits);
+        
         System.out.println("String de Bits depois de remover bits: " + stringDeBits);
       }
     }
@@ -30,7 +33,7 @@ public class CamadaAplicacaoTransmissora {
     }
 
 
-    //camadaFisicaTransmissora.enviarDado(quadro);
+    camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao);
   }
   
   public int inserirBit(String stringDeBits, int inteiro){
@@ -79,7 +82,7 @@ public class CamadaAplicacaoTransmissora {
     }
   }
   
-  public static void imprimirBits(int numero){
+  public static void imprimirBits(int numero){ // usei para depurar.
     
     int displayMask = 1 << 31; // 10000000 00000000 00000000 0000000
     
@@ -91,6 +94,10 @@ public class CamadaAplicacaoTransmissora {
         System.out.print(" ");
     }
     System.out.println();
+  }
+  
+  public void setCamadaFisicaTransmissora(CamadaFisicaTransmissora camadaFisicaTransmissora) {
+    this.camadaFisicaTransmissora = camadaFisicaTransmissora;
   }
   
 }

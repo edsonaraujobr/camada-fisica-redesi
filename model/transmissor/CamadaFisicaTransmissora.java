@@ -1,47 +1,50 @@
 package model.transmissor;
-//import model.MeioDeComunicacao;
+import model.MeioDeComunicacao;
+import controller.PrincipalController;
 
 public class CamadaFisicaTransmissora {
-  //MeioDeComunicacao meioDeComunicacao = new MeioDeComunicacao();
+  MeioDeComunicacao meioDeComunicacao = new MeioDeComunicacao();
+  PrincipalController principalController;
   
-  public void enviarDado(String quadro){
-    int tipoDeCodificacao = 0;
-    int fluxoBrutoDeBits[];
-    int ex [] = {3,2};
+  public void enviarDado(int quadro[], int tipoDeCodificacao){
+    int fluxoBrutoDeBits[] = {};
     
     switch(tipoDeCodificacao) {
       case 0: //codificao binaria
-        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoBinaria (ex);
+        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoBinaria (quadro);
         break;
         
       case 1: //codificacao manchester
-        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoManchester (ex);
+        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoManchester (quadro);
         break;
         
       case 2:  //codificacao manchester diferencial
-        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoManchesterDiferencial (ex);
+        fluxoBrutoDeBits = camadaFisicaTransmissoraCodificacaoManchesterDiferencial (quadro);
         break;
-        
     }
-    //meioDeComunicacao.enviarDado(quadro);
+    meioDeComunicacao.enviarDado(fluxoBrutoDeBits);
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {
     // implementar o algoritmo
-    int ex [] = {3,2};
-    return ex;
+    principalController.exibirSinaisBinarios(quadro);
+    return quadro; // neste caso ja esta na codificacao binaria
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoManchester (int quadro []) {
     // implementar o algoritmo
-    int ex [] = {3,2};
-    return ex;
+
+    return quadro;
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
     // implementar o algoritmo
-    int ex [] = {3,2};
-    return ex;
+
+    return quadro;
   }
+   
+   public void setPrincipalController(PrincipalController principalController){
+     this.principalController = principalController;
+   }
   
 }

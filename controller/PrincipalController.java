@@ -12,6 +12,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import model.transmissor.AplicacaoTransmissora;
+import model.transmissor.CamadaAplicacaoTransmissora;
+import model.transmissor.CamadaFisicaTransmissora;
 
 public class PrincipalController implements Initializable {
   @FXML
@@ -86,7 +88,14 @@ public class PrincipalController implements Initializable {
   
   AplicacaoTransmissora aplicacaoTransmissora;
   
+  CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
+  
+  CamadaFisicaTransmissora camadaFisicaTransmissora;
+  
   int tipoDeCodificacao = -1;
+  
+   ImageView arrayBitsAltos[] = {imgSinal01Alto, imgSinal02Alto, imgSinal03Alto, imgSinal04Alto, imgSinal05Alto, imgSinal06Alto, imgSinal07Alto, imgSinal08Alto};
+   ImageView arrayBitsBaixos[] = {imgSinal01Baixo, imgSinal02Baixo, imgSinal03Baixo, imgSinal04Baixo, imgSinal05Baixo, imgSinal06Baixo, imgSinal07Baixo, imgSinal08Baixo};
   
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -94,6 +103,20 @@ public class PrincipalController implements Initializable {
     radioButtonCodificacaoBinaria.setToggleGroup(grupoRadioTipoDeCodificacao);
     radioButtonManchester.setToggleGroup(grupoRadioTipoDeCodificacao);
     radioButtonManchesterDiferencial.setToggleGroup(grupoRadioTipoDeCodificacao);
+
+    instanciarCamadas();
+   
+  }
+  
+  public void instanciarCamadas() {
+    aplicacaoTransmissora = new AplicacaoTransmissora();
+    camadaAplicacaoTransmissora = new CamadaAplicacaoTransmissora();
+    aplicacaoTransmissora.setCamadaAplicacaoTransmissora(camadaAplicacaoTransmissora);
+    
+    camadaFisicaTransmissora = new CamadaFisicaTransmissora();
+    camadaAplicacaoTransmissora.setCamadaFisicaTransmissora(camadaFisicaTransmissora);
+
+    camadaFisicaTransmissora.setPrincipalController(this); // setar o controle para esse proprio.
   }
   
   @FXML
@@ -104,7 +127,6 @@ public class PrincipalController implements Initializable {
         imageDemarcacaoSinais.setVisible(true);
         buttonEnviar.setText("Reiniciar");
         
-        aplicacaoTransmissora = new AplicacaoTransmissora();
         aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao);
       } else {
         labelAviso.setVisible(true);
@@ -131,6 +153,38 @@ public class PrincipalController implements Initializable {
   @FXML
   void handleButtonManchesterDiferencial(ActionEvent event) {
     tipoDeCodificacao = 2;
+  }
+  
+  public void exibirSinaisBinarios(int quadro[]){
+    //transformarBitsEmString(quadro);
+    //arrayBitsBaixos[0].setVisible(true);
+    //imgSinal01Alto.setVisible(true);
+    imgSinal01Alto.setVisible(true);
+  }
+  
+  public void transformarBitsEmString(int quadro[]){
+    int displayMask = 1 << 31;
+    
+    /*ImageView arrayResultado[] = new ImageView [8];
+    int index = 1;*/
+    
+    for(int j = 0; j < quadro.length; j++) {
+      for (int i = 1; i <= 32; i++) {
+        
+        if((quadro[j] & displayMask) == 0) {
+          arrayBitsBaixos[0].setVisible(true);
+          /*arrayResultado[index] = arrayBitsBaixos[0];
+          index++;*/
+          
+        } else {
+          
+          arrayBitsAltos[0].setVisible(true);
+        }
+
+        quadro[j] <<= 1;
+      }
+    }
+
   }
   
 }

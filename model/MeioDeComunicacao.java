@@ -1,11 +1,11 @@
-/*package model;
-import model.receptor.CamadaFisicaReceptora;
+package model;
+//import model.receptor.CamadaFisicaReceptora;
 
 public class MeioDeComunicacao {
-  CamadaFisicaReceptora camadaFisicaReceptora = new CamadaFisicaReceptora();
+ // CamadaFisicaReceptora camadaFisicaReceptora = new CamadaFisicaReceptora();
   
   public void enviarDado( int fluxoBrutoDeBits[]) {
-    int fluxoBrutoDeBitsPontoA[], fluxoBrutoDeBitsPontoB[] = {3};
+    /*int fluxoBrutoDeBitsPontoA[], fluxoBrutoDeBitsPontoB[] = {3};
     
     fluxoBrutoDeBitsPontoA = fluxoBrutoDeBits;
     
@@ -13,6 +13,7 @@ public class MeioDeComunicacao {
      // fluxoBrutoDeBitsPontoB += fluxoBrutoDeBitsPontoA; 
     }
     
-    //camadaFisicaReceptora.receberDados(fluxoBrutoDeBitsPontoB);
+    //camadaFisicaReceptora.receberDados(fluxoBrutoDeBitsPontoB);*/
+    System.out.println("Hello, World");
   }
-}*/
+}
