@@ -1,7 +1,11 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
@@ -11,6 +15,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 import model.transmissor.AplicacaoTransmissora;
 import model.transmissor.CamadaAplicacaoTransmissora;
 import model.transmissor.CamadaFisicaTransmissora;
@@ -94,9 +100,6 @@ public class PrincipalController implements Initializable {
   
   int tipoDeCodificacao = -1;
   
-   ImageView arrayBitsAltos[] = {imgSinal01Alto, imgSinal02Alto, imgSinal03Alto, imgSinal04Alto, imgSinal05Alto, imgSinal06Alto, imgSinal07Alto, imgSinal08Alto};
-   ImageView arrayBitsBaixos[] = {imgSinal01Baixo, imgSinal02Baixo, imgSinal03Baixo, imgSinal04Baixo, imgSinal05Baixo, imgSinal06Baixo, imgSinal07Baixo, imgSinal08Baixo};
-  
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     grupoRadioTipoDeCodificacao = new ToggleGroup();
@@ -156,35 +159,47 @@ public class PrincipalController implements Initializable {
   }
   
   public void exibirSinaisBinarios(int quadro[]){
-    //transformarBitsEmString(quadro);
-    //arrayBitsBaixos[0].setVisible(true);
-    //imgSinal01Alto.setVisible(true);
-    imgSinal01Alto.setVisible(true);
-  }
-  
-  public void transformarBitsEmString(int quadro[]){
     int displayMask = 1 << 31;
     
-    /*ImageView arrayResultado[] = new ImageView [8];
-    int index = 1;*/
+    ImageView arraySinaisAltos[] = {imgSinal01Alto,imgSinal02Alto,imgSinal03Alto, imgSinal04Alto, imgSinal05Alto, imgSinal06Alto, imgSinal07Alto, imgSinal08Alto};
+    ImageView arraySinaisBaixos[] = {imgSinal01Baixo,imgSinal02Baixo,imgSinal03Baixo, imgSinal04Baixo, imgSinal05Baixo, imgSinal06Baixo, imgSinal07Baixo, imgSinal08Baixo};
+
+    List<Integer> listSinaisResultado = new ArrayList<>();
     
-    for(int j = 0; j < quadro.length; j++) {
-      for (int i = 1; i <= 32; i++) {
-        
+    new Thread(() -> {
+      for(int j = 0; j < quadro.length; j++) {
+        for (int i = 1; i <= 32; i++) {
+
         if((quadro[j] & displayMask) == 0) {
-          arrayBitsBaixos[0].setVisible(true);
-          /*arrayResultado[index] = arrayBitsBaixos[0];
-          index++;*/
-          
+          listSinaisResultado.add(0, 0);
+
         } else {
-          
-          arrayBitsAltos[0].setVisible(true);
+          listSinaisResultado.add(0, 1);
+
+        }
+        
+        for (int k = 0; k <= listSinaisResultado.size() - 1; k++) {
+          if(listSinaisResultado.get(k) == 0) {
+            arraySinaisBaixos[k].setVisible(true);
+            arraySinaisAltos[k].setVisible(false);
+          } else {
+            arraySinaisAltos[k].setVisible(true);
+            arraySinaisBaixos[k].setVisible(false);
+          }
+        }
+        try {
+          Thread.sleep(2000);
+        } catch(InterruptedException e) {}
+        
+        if (listSinaisResultado.size() - 1 == 7) {
+          listSinaisResultado.remove(listSinaisResultado.size()-1); // remover o ultimo elemento.
         }
 
         quadro[j] <<= 1;
-      }
-    }
+        }
+      } 
+    }).start();
 
-  }
+  } // fim do metodo exibirSinaisBinarios
   
 }
