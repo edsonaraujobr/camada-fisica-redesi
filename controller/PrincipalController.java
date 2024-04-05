@@ -4,8 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
@@ -15,11 +13,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
-import javafx.scene.transform.Translate;
-import javafx.util.Duration;
-import model.transmissor.AplicacaoTransmissora;
-import model.transmissor.CamadaAplicacaoTransmissora;
-import model.transmissor.CamadaFisicaTransmissora;
+import model.receptor.*;
+import model.transmissor.*;
+import model.MeioDeComunicacao;
 
 public class PrincipalController implements Initializable {
   @FXML
@@ -93,10 +89,14 @@ public class PrincipalController implements Initializable {
   ToggleGroup grupoRadioTipoDeCodificacao;
   
   AplicacaoTransmissora aplicacaoTransmissora;
-  
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
-  
   CamadaFisicaTransmissora camadaFisicaTransmissora;
+  
+  MeioDeComunicacao meioDeComunicacao;
+  
+  CamadaFisicaReceptora camadaFisicaReceptora;
+  CamadaAplicacaoReceptora camadaAplicacaoReceptora;
+  AplicacaoReceptora aplicacaoReceptora;
   
   int tipoDeCodificacao = -1;
   
@@ -120,6 +120,24 @@ public class PrincipalController implements Initializable {
     camadaAplicacaoTransmissora.setCamadaFisicaTransmissora(camadaFisicaTransmissora);
 
     camadaFisicaTransmissora.setPrincipalController(this); // setar o controle para esse proprio.
+    
+    meioDeComunicacao = new MeioDeComunicacao();
+    
+    camadaFisicaTransmissora.setMeioDeComunicacao(meioDeComunicacao);
+    
+    camadaFisicaReceptora = new CamadaFisicaReceptora();
+    
+    meioDeComunicacao.setCamadaFisicaReceptora(camadaFisicaReceptora);
+    
+    camadaAplicacaoReceptora = new CamadaAplicacaoReceptora();
+    
+    camadaFisicaReceptora.setAplicacaoReceptora(camadaAplicacaoReceptora);
+    
+    aplicacaoReceptora = new AplicacaoReceptora();
+    
+    camadaAplicacaoReceptora.setAplicacaoReceptora(aplicacaoReceptora);
+    
+    aplicacaoReceptora.setPrincipalController(this);
   }
   
   @FXML
@@ -158,6 +176,10 @@ public class PrincipalController implements Initializable {
     tipoDeCodificacao = 2;
   }
   
+  public void exibirMensagemReceptor(String mensagem){
+    textAreaReceptor.setText(mensagem);
+  }
+  
   public void exibirSinaisBinarios(int quadro[]){
     int displayMask = 1 << 31;
     
@@ -172,10 +194,8 @@ public class PrincipalController implements Initializable {
 
         if((quadro[j] & displayMask) == 0) {
           listSinaisResultado.add(0, 0);
-
         } else {
           listSinaisResultado.add(0, 1);
-
         }
         
         for (int k = 0; k <= listSinaisResultado.size() - 1; k++) {
@@ -187,8 +207,9 @@ public class PrincipalController implements Initializable {
             arraySinaisBaixos[k].setVisible(false);
           }
         }
+        
         try {
-          Thread.sleep(2000);
+          Thread.sleep(100);
         } catch(InterruptedException e) {}
         
         if (listSinaisResultado.size() - 1 == 7) {
@@ -196,8 +217,22 @@ public class PrincipalController implements Initializable {
         }
 
         quadro[j] <<= 1;
+        } // fim for dos 32 bits
+      }// fim for de quadro
+      while(!listSinaisResultado.isEmpty()) {
+        if(listSinaisResultado.get(listSinaisResultado.size() - 2) == 0) { // penultimo
+          arraySinaisBaixos[7].setVisible(true);
+          arraySinaisAltos[7].setVisible(false);
+        } else {
+          arraySinaisBaixos[7].setVisible(false);
+          arraySinaisAltos[7].setVisible(true);
+      
         }
-      } 
+        listSinaisResultado.remove(listSinaisResultado.size() - 1); // remove o ultimo   
+
+      }
+
+
     }).start();
 
   } // fim do metodo exibirSinaisBinarios
