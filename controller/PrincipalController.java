@@ -153,8 +153,10 @@ public class PrincipalController implements Initializable {
         labelAviso.setVisible(true);
       }
     } else { // reiniciar
+      instanciarCamadas();
       buttonEnviar.setText("Enviar");
       textAreaTransmissor.setText("");
+      textAreaReceptor.setText("");
       imageDemarcacaoSinais.setVisible(false);
       grupoRadioTipoDeCodificacao.selectToggle(null);
     }

@@ -1,4 +1,3 @@
-import java.net.URL;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +15,7 @@ public class Principal  extends Application {
   
   @Override
   public void start(Stage primaryStage) throws Exception {
-    primaryStage.setTitle("Camada Física");
+    primaryStage.setTitle("Trabalho de Redes I: Camada Física");
     Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
     scene = new Scene(root);
 

@@ -35,13 +35,11 @@ public class CamadaFisicaReceptora {
   
   public int[] camadaFisicaTransmissoraCodificacaoManchester (int quadro []) {
     // implementar o algoritmo
-    int ex [] = {3,2};
-    return ex;
+    return quadro;
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
     // implementar o algoritmo
-    int ex [] = {3,2};
-    return ex;
+    return quadro;
   }
 }
