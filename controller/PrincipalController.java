@@ -1,3 +1,12 @@
+/* ***************************************************************
+* Autor............: Edson Araujo de Souza Neto
+* Matricula........: 202210169
+* Inicio...........: 01/04/2024
+* Ultima alteracao.: 07/04/2024
+* Nome.............: principalController
+* Funcao...........: manipula a gui do usuario, instancia as camadas e executa as mesmas.
+*************************************************************** */
+
 package controller;
 
 import java.net.URL;
@@ -109,13 +118,13 @@ public class PrincipalController implements Initializable {
 
     instanciarCamadas();
    
-  }
+  } // fim metodoInitialize
   
   public void instanciarCamadas() {
     aplicacaoTransmissora = new AplicacaoTransmissora();
     camadaAplicacaoTransmissora = new CamadaAplicacaoTransmissora();
     aplicacaoTransmissora.setCamadaAplicacaoTransmissora(camadaAplicacaoTransmissora);
-    
+  
     camadaFisicaTransmissora = new CamadaFisicaTransmissora();
     camadaAplicacaoTransmissora.setCamadaFisicaTransmissora(camadaFisicaTransmissora);
 
@@ -138,7 +147,7 @@ public class PrincipalController implements Initializable {
     camadaAplicacaoReceptora.setAplicacaoReceptora(aplicacaoReceptora);
     
     aplicacaoReceptora.setPrincipalController(this);
-  }
+  } // fim metodo instaciarCamadas
   
   @FXML
   void handleButtonEnviar(ActionEvent event) {
@@ -147,9 +156,10 @@ public class PrincipalController implements Initializable {
         labelAviso.setVisible(false);
         imageDemarcacaoSinais.setVisible(true);
         buttonEnviar.setText("Reiniciar");
-        
         aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao);
-      } else {
+        buttonEnviar.setStyle("-fx-background-color:  #E1AF00"); // button fica amarelo
+        textAreaTransmissor.setEditable(false); // nao permite editar
+      } else { // nao selecionou uma codificacao ou digitou no text area
         labelAviso.setVisible(true);
       }
     } else { // reiniciar
@@ -159,9 +169,11 @@ public class PrincipalController implements Initializable {
       textAreaReceptor.setText("");
       imageDemarcacaoSinais.setVisible(false);
       grupoRadioTipoDeCodificacao.selectToggle(null);
+      buttonEnviar.setStyle("-fx-background-color:  #1cb241"); // button fica verde
+      textAreaTransmissor.setEditable(true); // permite editar
     }
 
-  }
+  } // fim metodo handleButtonEnviar
   
   @FXML
   void handleButtonCodificacaoBinaria(ActionEvent event) {

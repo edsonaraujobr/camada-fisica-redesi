@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.381" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -145,20 +145,20 @@
       </Label>
       <RadioButton fx:id="radioButtonCodificacaoBinaria" layoutX="98.0" layoutY="483.0" mnemonicParsing="false" onAction="#handleButtonCodificacaoBinaria" text="Codificação Binária" textFill="WHITE">
          <font>
-            <Font name="Arial Bold" size="18.0" />
+            <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
       <RadioButton fx:id="radioButtonManchester" layoutX="98.0" layoutY="519.0" mnemonicParsing="false" onAction="#handleButtonManchester" text="Codificação Manchester" textFill="WHITE">
          <font>
-            <Font name="Arial Bold" size="18.0" />
+            <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
       <RadioButton fx:id="radioButtonManchesterDiferencial" layoutX="98.0" layoutY="555.0" mnemonicParsing="false" onAction="#handleButtonManchesterDiferencial" text="Codificação Manchester Diferencial" textFill="WHITE">
          <font>
-            <Font name="Arial Bold" size="18.0" />
+            <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
-      <Button fx:id="buttonEnviar" layoutX="602.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleButtonEnviar" text="Enviar">
+      <Button fx:id="buttonEnviar" layoutX="602.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleButtonEnviar" style="-fx-background-color: #1cb241;" text="Enviar" textFill="WHITE">
          <font>
             <Font name="Arial" size="18.0" />
          </font>

@@ -1,3 +1,12 @@
+/* ***************************************************************
+* Autor............: Edson Araujo de Souza Neto
+* Matricula........: 202210169
+* Inicio...........: 01/04/2024
+* Ultima alteracao.: 07/04/2024
+* Nome.............: CamadaFisicaTransmissora
+* Funcao...........: Move o fluxo de bits para o meio de comunicacao de acordo com a codificacao
+*************************************************************** */
+
 package model.transmissor;
 import model.MeioDeComunicacao;
 import controller.PrincipalController;

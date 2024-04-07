@@ -1,3 +1,13 @@
+/* ***************************************************************
+* Autor............: Edson Araujo de Souza Neto
+* Matricula........: 202210169
+* Inicio...........: 01/04/2024
+* Ultima alteracao.: 07/04/2024
+* Nome.............: CamadaFisicaReceptora
+* Funcao...........: Recebe o fluxo de bits do meio de comunicacao de acordo com o tipo de codificacao
+                     e move para camada aplicacao receptora
+*************************************************************** */
+
 package model.receptor;
 
 public class CamadaFisicaReceptora {
@@ -20,7 +30,6 @@ public class CamadaFisicaReceptora {
         break;
         
     }
-    System.out.println("Passou pela camadaFisicaReceptora");
     camadaAplicacaoReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao);
   }
   
