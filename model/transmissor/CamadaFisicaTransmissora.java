@@ -35,20 +35,17 @@ public class CamadaFisicaTransmissora {
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {
-    // implementar o algoritmo
-    //principalController.exibirSinaisBinarios(quadro);
-    return quadro; // neste caso ja esta na codificacao binaria
+    principalController.exibirSinaisBinarios(quadro);
+    return quadro; 
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoManchester (int quadro []) {
-    // implementar o algoritmo
-
+    principalController.exibirSinaisManchester(quadro);
     return quadro;
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
-    // implementar o algoritmo
-
+     principalController.exibirSinaisManchesterDiferencial(quadro);
     return quadro;
   }
    
@@ -59,5 +56,5 @@ public class CamadaFisicaTransmissora {
    public void setMeioDeComunicacao(MeioDeComunicacao meioDeComunicacao){
      this.meioDeComunicacao = meioDeComunicacao;
    }
-  
+
 }

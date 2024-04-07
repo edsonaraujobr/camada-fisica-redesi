@@ -35,7 +35,6 @@ public class CamadaAplicacaoReceptora {
         break;
         
     }
-    System.out.println("A mensagem é: " + mensagem);
     aplicacaoReceptora.receberDado(mensagem);
   }
   
@@ -70,6 +69,9 @@ public class CamadaAplicacaoReceptora {
         resultado += (char) byteAtual;
         byteAtual = 0;
       }
+      if((numero & (7 << 29)) == 0) { // proximos tres bits sao zero? se sim para.
+        break;
+      }
     }          
     return resultado;
   } // fim metodo transformarManchesterEmString
@@ -83,11 +85,9 @@ public class CamadaAplicacaoReceptora {
       // a primeira vez vez tenho que ler os dois primeiros e ler o restante de forma separada
       if((numero & displayMask) == 0) {
         resultado.append(0);
-        System.out.println("O primeiro é 0");
         ultimoBitLido = 1;
       } else {
         resultado.append(1);
-        System.out.println("O primeiro é 1");
         ultimoBitLido = 0;
       }
       numero <<= 2; 
@@ -97,10 +97,8 @@ public class CamadaAplicacaoReceptora {
         if( (numero & displayMask) == 0) {
           if(ultimoBitLido == 1) { // houve transicao (10)
             resultado.append(0); 
-            System.out.println("Houve transição: (0) | posição: "+i);
             ultimoBitLido = 1;            
-          } else { // nao houve transicao (00)
-            System.out.println("Não Houve transição: (1) | posição: "+i);            
+          } else { // nao houve transicao (00)         
             resultado.append(1);  
             ultimoBitLido = 1;   
           }
@@ -108,18 +106,14 @@ public class CamadaAplicacaoReceptora {
           if(ultimoBitLido == 1) { // nao houve transicao (11)
             resultado.append(1);   
             ultimoBitLido = 0;
-            System.out.println("Não Houve transição: (1) | posição: "+i); 
           } else { // houve transicao (01)
             ultimoBitLido = 0;
             resultado.append(0);   
-            System.out.println("Houve transição: (0) | posição: "+i); 
           }
         }
         
         if ((i + 2) % 16 == 0) {
-          System.out.println("Bit: " + resultado.toString() );
           saida += converterStringDeBitsEmCaractere(resultado);
-          System.out.println("Caractere: " + saida);
           resultado = new StringBuilder();
         }
         numero <<= 2;
@@ -131,10 +125,8 @@ public class CamadaAplicacaoReceptora {
         if( (numero & displayMask) == 0) {
           if(ultimoBitLido == 1) { // houve transicao (10)
             resultado.append(0); 
-            System.out.println("Houve transição: (0) | posição: "+i);
             ultimoBitLido = 1;            
-          } else { // nao houve transicao (00)
-            System.out.println("Não Houve transição: (1) | posição: "+i);            
+          } else { // nao houve transicao (00)          
             resultado.append(1);  
             ultimoBitLido = 1;   
           }
@@ -142,19 +134,18 @@ public class CamadaAplicacaoReceptora {
           if(ultimoBitLido == 1) { // nao houve transicao (11)
             resultado.append(1);   
             ultimoBitLido = 0;
-            System.out.println("Não Houve transição: (1) | posição: "+i); 
           } else { // houve transicao (01)
             ultimoBitLido = 0;
             resultado.append(0);   
-            System.out.println("Houve transição: (0) | posição: "+i); 
           }
         }
         
         if ((i + 2) % 16 == 0) {
-          System.out.println("Bit: " + resultado.toString() );
           saida += converterStringDeBitsEmCaractere(resultado);
-          System.out.println("Caractere: " + saida);
           resultado = new StringBuilder();
+        }
+        if((numero & (7 << 29)) == 0) { // proximos tres bits sao zero? se sim para.
+          break;
         }
         numero <<= 2;
       }

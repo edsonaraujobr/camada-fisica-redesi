@@ -101,39 +101,84 @@
             <Image url="@../img/8baixo.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical01e02" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo01" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe1e2.png" />
+            <Image url="@../img/manchester1alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical02e03" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo02" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe2e3.png" />
+            <Image url="@../img/manchester2alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical03e04" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo03" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe3e4.png" />
+            <Image url="@../img/manchester3alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical04e05" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo04" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe4e5.png" />
+            <Image url="@../img/manchester4alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical05e06" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo05" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe5e6.png" />
+            <Image url="@../img/manchester5alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical06e07" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo06" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe6e7.png" />
+            <Image url="@../img/manchester6alto.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imagemSinalVertical07e08" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="imgManchesterAltoBaixo07" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../img/pe7e8.png" />
+            <Image url="@../img/manchester7alto.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterAltoBaixo08" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester8alto.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto01" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester1baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto02" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester2baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto03" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester3baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto04" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester4baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto05" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester5baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto06" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester6baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto07" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester7baixo.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgManchesterBaixoAlto08" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../img/manchester8baixo.png" />
          </image>
       </ImageView>
       <TextArea fx:id="textAreaTransmissor" layoutX="67.0" layoutY="117.0" prefHeight="123.0" prefWidth="214.0" promptText="Sua mensagem aqui" wrapText="true" />

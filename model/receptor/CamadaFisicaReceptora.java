@@ -38,17 +38,14 @@ public class CamadaFisicaReceptora {
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {
-
     return quadro;
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoManchester (int quadro []) {
-    // implementar o algoritmo
     return quadro;
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
-    // implementar o algoritmo
     return quadro;
   }
 }

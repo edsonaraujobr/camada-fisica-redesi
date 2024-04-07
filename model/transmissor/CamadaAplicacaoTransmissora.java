@@ -20,10 +20,6 @@ public class CamadaAplicacaoTransmissora {
     int quadro[] = new int [retornarTamanho(tipoDeCodificacao, arrayCaracteres.length)];
     String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres, tipoDeCodificacao);
     
-    System.out.println("A palavra é: " + mensagem);
-    System.out.println("String de Bits antes: " + stringDeBits);
-    System.out.println("Tamanho do Quadro: " + quadro.length);
-    
     switch(tipoDeCodificacao) {
       case 0: // binario
         for(int i = 0; i < quadro.length; i++) {
@@ -31,8 +27,6 @@ public class CamadaAplicacaoTransmissora {
 
           if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
             stringDeBits = removerBitsLidos(stringDeBits, 32);
-
-            System.out.println("String de Bits depois de remover bits: " + stringDeBits);
           }
         }        
         break;
@@ -42,39 +36,30 @@ public class CamadaAplicacaoTransmissora {
 
           if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
             stringDeBits = removerBitsLidos(stringDeBits, 32);
-
-            System.out.println("String de Bits depois de remover bits: " + stringDeBits);
           }
         }           
         break;
       case 2: // manchester diferencial
         for(int i = 0; i < quadro.length; i++) {
           quadro[i] = inserirBitManchesterDiferencial(stringDeBits, quadro[i]);
-
+          
           if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
+ 
             stringDeBits = removerBitsLidos(stringDeBits, 32); // preciso do ultimo como informacao
 
-            System.out.println("String de Bits depois de remover bits: " + stringDeBits);
           }
         }            
         break;
     } // fim switch
-
     
-    System.out.println("Os bits de quadro são: ");
-    
-    for (int i = 0; i < quadro.length; i++) {
-      System.out.println("quadro" + i);
-      imprimirBits(quadro[i]);
-      System.out.println();
-    }
-
-
+    manchesterDiferencialPrimeiroBit = true;
     camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao);
   } // fim metodo enviarDado
   
+  
   public int inserirBitManchesterDiferencial(String stringDeBits, int inteiro) {
     if ( manchesterDiferencialPrimeiroBit) {
+      System.out.println("Primeira vez!");
       char bitAnterior = stringDeBits.charAt(0);
       char bit = stringDeBits.charAt(1); 
       if (bitAnterior == '0' && bit == '1') {
@@ -104,37 +89,44 @@ public class CamadaAplicacaoTransmissora {
           }
 
         }
-      } // fim do for         
-     manchesterDiferencialPrimeiroBit = false; // apenas uma vez, por isso virou falso
+      } // fim do for       
+      manchesterDiferencialPrimeiroBit = false; // apenas uma vez, por isso virou falso
     } else { // nao eh a primeira iteracao
-      for (int index = 0; index < 32; index += 2) {
+      char bitAnterior = ultimoBitLido;
+      char bit = stringDeBits.charAt(0); 
+      if (bitAnterior == '1' && bit == '0') {
+        inteiro |= (1 << 30);         // segundo bit recebe 1    
+      } else if(bitAnterior == '0' && bit == '1') {
+        inteiro |= (1 << 31);      // primeiro bit recebe 1
+      }
+      
+      for (int index = 2; index < 32; index += 2) {
         if(index+1 < stringDeBits.length()) { // verificar se existe aquela posicao na string de Bits.
-          char bitAtual = stringDeBits.charAt(index); 
-          char bitSucessor = stringDeBits.charAt(index + 1);
-          char bitAnterior = ultimoBitLido;
-          
-          if ((bitAtual == '0' && bitAnterior == '1') || (bitAtual == '1' && bitAnterior == '0')) { // teve transicao
-            if (bitAtual == '0' && bitAnterior == '1') { 
-              inteiro |= (1 << (31 - index));     
-              bitAnterior = '1';
-            } else if( bitAtual == '1' && bitAnterior == '0') { 
-              inteiro |= (1 << (31 - index - 1)); 
-              bitAnterior = '0';               
+          bit = stringDeBits.charAt(index); 
+          bitAnterior = stringDeBits.charAt(index - 1);
+
+          if ((bitAnterior == '1' && bit == '0') || (bitAnterior == '0' && bit == '1')) { // teve transicao
+            if (bitAnterior == '1' && bit == '0') { 
+              inteiro |= (1 << (31 - index - 1));              
+            } else if(bitAnterior == '0' && bit == '1') { 
+               inteiro |= (1 << (31 - index ));              
             }
           } else { // nao teve transicao
-            if( bitAtual == '1' && bitAnterior == '1' ) {
-              inteiro |= (1 << (31 - index ));
-              bitAnterior = '0';              
-            } else if( bitAtual == '0' && bitAnterior == '0' ){
-              inteiro |= (1 << (31 - index - 1)); 
-              bitAnterior = '1';
+            if(bitAnterior == '1' && bit == '1') {
+              inteiro |= (1 << (31 - index));              
+            } else if(bitAnterior == '0' && bit == '0'){
+              inteiro |= (1 << (31 - index - 1));                
             }
-          } // fim else       
+          }
 
-        } // fim if
+        }
       }  // fim for      
     } // fim else
-    ultimoBitLido  = stringDeBits.charAt(stringDeBits.length() - 1);
+    
+    if(stringDeBits.length() > 31) {
+      ultimoBitLido = stringDeBits.charAt(31);
+    }
+
     return inteiro;
   } // fim metodo inserirBitManchesterDiferencial
   
@@ -232,18 +224,6 @@ public class CamadaAplicacaoTransmissora {
     }
   } // fim metodoRetornarTamanho
   
-  public static void imprimirBits(int numero){ 
-    int displayMask = 1 << 31; 
-    
-    for (int i = 1; i <= 32 ; i++) { 
-      System.out.print((numero & displayMask) == 0 ? "0" : "1");
-      numero <<= 1; 
-      
-      if (i % 8 == 0) //exibe espaco a cada 8 bits
-        System.out.print(" ");
-    }
-    System.out.println();
-  } // fim metodo imprimirBits
   
   public void setCamadaFisicaTransmissora(CamadaFisicaTransmissora camadaFisicaTransmissora) {
     this.camadaFisicaTransmissora = camadaFisicaTransmissora;

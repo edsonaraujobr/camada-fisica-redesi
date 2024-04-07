@@ -14,7 +14,6 @@ public class AplicacaoReceptora {
   PrincipalController principalController;
   
   public void receberDado(String mensagem) {
-    System.out.println(mensagem);
     principalController.exibirMensagemReceptor(mensagem);
   }
   
