@@ -15,7 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
+import controller.PrincipalController;
+  
 public class Principal  extends Application {
   
   private static Scene scene;
