@@ -10,141 +10,44 @@
 package model.transmissor;
 
 public class CamadaAplicacaoTransmissora {
-  CamadaFisicaTransmissora camadaFisicaTransmissora;
-  static boolean manchesterDiferencialPrimeiroBit = true; // para diferenciar o primeiro bit
-  static char ultimoBitLido;
+  CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora;
   
   public void enviarDado(String mensagem, int tipoDeCodificacao) {
     char arrayCaracteres[] = mensagem.toCharArray();
     
     int quadro[] = new int [retornarTamanho(tipoDeCodificacao, arrayCaracteres.length)];
-    String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres, tipoDeCodificacao);
+    String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres, 0);
+    System.out.println("String de bits antes: " + stringDeBits);
     
-    switch(tipoDeCodificacao) {
-      case 0: // binario
-        for(int i = 0; i < quadro.length; i++) {
-          quadro[i] = inserirBitBinario(stringDeBits, quadro[i]);
+    for(int i = 0; i < quadro.length; i++) {
+      System.out.println("Quadro: " + quadro[i]);
+      quadro[i] = inserirBitBinario(stringDeBits, quadro[i]);
 
-          if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
-            stringDeBits = removerBitsLidos(stringDeBits, 32);
-          }
-        }        
-        break;
-      case 1: // manchester
-        for(int i = 0; i < quadro.length; i++) {
-          quadro[i] = inserirBitManchester(stringDeBits, quadro[i]);
-
-          if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
-            stringDeBits = removerBitsLidos(stringDeBits, 32);
-          }
-        }           
-        break;
-      case 2: // manchester diferencial
-        for(int i = 0; i < quadro.length; i++) {
-          quadro[i] = inserirBitManchesterDiferencial(stringDeBits, quadro[i]);
-          
-          if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
- 
-            stringDeBits = removerBitsLidos(stringDeBits, 32); // preciso do ultimo como informacao
-
-          }
-        }            
-        break;
-    } // fim switch
-    
-    manchesterDiferencialPrimeiroBit = true;
-    camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao);
-  } // fim metodo enviarDado
-  
-  
-  public int inserirBitManchesterDiferencial(String stringDeBits, int inteiro) {
-    if ( manchesterDiferencialPrimeiroBit) {
-      System.out.println("Primeira vez!");
-      char bitAnterior = stringDeBits.charAt(0);
-      char bit = stringDeBits.charAt(1); 
-      if (bitAnterior == '0' && bit == '1') {
-        inteiro |= (1 << 30);         // segundo bit recebe 1    
-      } else {
-        inteiro |= (1 << 31);      // primeiro bit recebe 1
-      }
-      
-      // vamos para o for desconsiderando os dois primeiros bits, por isso index = 2
-      for (int index = 2; index < 32; index += 2) {
-        if(index+1 < stringDeBits.length()) { // verificar se existe aquela posicao na string de Bits.
-          bit = stringDeBits.charAt(index); 
-          bitAnterior = stringDeBits.charAt(index - 1);
-
-          if ((bitAnterior == '1' && bit == '0') || (bitAnterior == '0' && bit == '1')) { // teve transicao
-            if (bitAnterior == '1' && bit == '0') { 
-              inteiro |= (1 << (31 - index - 1));              
-            } else if(bitAnterior == '0' && bit == '1') { 
-               inteiro |= (1 << (31 - index ));              
-            }
-          } else { // nao teve transicao
-            if(bitAnterior == '1' && bit == '1') {
-              inteiro |= (1 << (31 - index));              
-            } else if(bitAnterior == '0' && bit == '0'){
-              inteiro |= (1 << (31 - index - 1));                
-            }
-          }
-
-        }
-      } // fim do for       
-      manchesterDiferencialPrimeiroBit = false; // apenas uma vez, por isso virou falso
-    } else { // nao eh a primeira iteracao
-      char bitAnterior = ultimoBitLido;
-      char bit = stringDeBits.charAt(0); 
-      if (bitAnterior == '1' && bit == '0') {
-        inteiro |= (1 << 30);         // segundo bit recebe 1    
-      } else if(bitAnterior == '0' && bit == '1') {
-        inteiro |= (1 << 31);      // primeiro bit recebe 1
-      }
-      
-      for (int index = 2; index < 32; index += 2) {
-        if(index+1 < stringDeBits.length()) { // verificar se existe aquela posicao na string de Bits.
-          bit = stringDeBits.charAt(index); 
-          bitAnterior = stringDeBits.charAt(index - 1);
-
-          if ((bitAnterior == '1' && bit == '0') || (bitAnterior == '0' && bit == '1')) { // teve transicao
-            if (bitAnterior == '1' && bit == '0') { 
-              inteiro |= (1 << (31 - index - 1));              
-            } else if(bitAnterior == '0' && bit == '1') { 
-               inteiro |= (1 << (31 - index ));              
-            }
-          } else { // nao teve transicao
-            if(bitAnterior == '1' && bit == '1') {
-              inteiro |= (1 << (31 - index));              
-            } else if(bitAnterior == '0' && bit == '0'){
-              inteiro |= (1 << (31 - index - 1));                
-            }
-          }
-
-        }
-      }  // fim for      
-    } // fim else
-    
-    if(stringDeBits.length() > 31) {
-      ultimoBitLido = stringDeBits.charAt(31);
-    }
-
-    return inteiro;
-  } // fim metodo inserirBitManchesterDiferencial
-  
-  public int inserirBitManchester(String stringDeBits, int inteiro) {
-    for (int index = 0; index < 32; index += 2) {
-      if(index < stringDeBits.length()) { // verificar se existe aquela posicao na string de Bits.
-        char bit = stringDeBits.charAt(index); 
-        char bit2 = stringDeBits.charAt(index + 1);
-
-        if (bit == '1' && bit2 == '0' ) 
-          inteiro |= (1 << (31 - index));
-        else  // 01
-          inteiro |= (1 << (31 - index-1));    
+      if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
+        stringDeBits = removerBitsLidos(stringDeBits, 32);
+        System.out.println("String de bits pos remover: " + stringDeBits);
       }
     }   
-    return inteiro;
-  } // fim metodo inserirBitManchester
+    
+    for(int i = 0; i < quadro.length; i++) {
+      System.out.println("Quadro: "+ i);
+      imprimirBits(quadro[i]);
+      System.out.println();
+    }
+
+    //camadaEnlaceDadosTransmissora.enviarDado(quadro, tipoDeCodificacao);
+  } // fim metodo enviarDado
   
+  public void imprimirBits(int quadro) {
+    int displayMask = 1 << 31; // 10000000 00000000 00000000 0000000
+    for (int i = 1; i <= 32 ; i++) { // da direita para esquerda.
+      System.out.print((quadro & displayMask) == 0 ? "0" : "1");
+      quadro <<= 1; // desloca o valor uma posição a esquerda é oq permite q seja verificado bit a bit
+      
+      if (i % 8 == 0) //exibe espaço a cada 8 bits
+        System.out.print(" ");
+    }    
+  }
   public int inserirBitBinario(String stringDeBits, int inteiro){
     for (int index = 0; index < 32; index++) {
       if(index < stringDeBits.length()) { // verificar se existe aquela posicao na string de Bits.
@@ -225,8 +128,8 @@ public class CamadaAplicacaoTransmissora {
   } // fim metodoRetornarTamanho
   
   
-  public void setCamadaFisicaTransmissora(CamadaFisicaTransmissora camadaFisicaTransmissora) {
-    this.camadaFisicaTransmissora = camadaFisicaTransmissora;
+  public void setCamadaEnlaceDadosTransmissora(CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora) {
+    this.camadaEnlaceDadosTransmissora = camadaEnlaceDadosTransmissora;
   }
   
 }

@@ -11,7 +11,7 @@
 package model.receptor;
 
 public class CamadaFisicaReceptora {
-  CamadaAplicacaoReceptora camadaAplicacaoReceptora;
+  CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora;
   
   public void receberDado(int quadro [], int tipoDeCodificacao){
     int fluxoBrutoDeBits[] = {};
@@ -30,11 +30,11 @@ public class CamadaFisicaReceptora {
         break;
         
     }
-    camadaAplicacaoReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao);
+    camadaEnlaceDadosReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao);
   }
   
-  public void setAplicacaoReceptora(CamadaAplicacaoReceptora camadaAplicacaoReceptora){
-    this.camadaAplicacaoReceptora = camadaAplicacaoReceptora;
+  public void setCamadaEnlaceDadosReceptora(CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora){
+    this.camadaEnlaceDadosReceptora = camadaEnlaceDadosReceptora;
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {

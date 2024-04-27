@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.381" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalController">
    <children>
       <ImageView fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -181,6 +181,11 @@
             <Image url="@../img/manchester8baixo.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="imgQuadrosButtons" fitHeight="600.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../img/quadradoradios.png" />
+         </image>
+      </ImageView>
       <TextArea fx:id="textAreaTransmissor" layoutX="67.0" layoutY="117.0" prefHeight="123.0" prefWidth="214.0" promptText="Sua mensagem aqui" wrapText="true" />
       <TextArea fx:id="textAreaReceptor" editable="false" focusTraversable="false" layoutX="531.0" layoutY="117.0" prefHeight="123.0" prefWidth="214.0" promptText="Resposta" wrapText="true" />
       <Label fx:id="labelAviso" layoutX="164.0" layoutY="360.0" text="Você precisa selecionar um tipo de codificação e digitar algo na tela do transmissor." textFill="#ecff00" visible="false">
@@ -188,25 +193,45 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <RadioButton fx:id="radioButtonCodificacaoBinaria" layoutX="98.0" layoutY="483.0" mnemonicParsing="false" onAction="#handleButtonCodificacaoBinaria" text="Codificação Binária" textFill="WHITE">
+      <RadioButton fx:id="radioButtonCodificacaoBinaria" layoutX="58.0" layoutY="489.0" mnemonicParsing="false" onAction="#handleButtonCodificacaoBinaria" text="Codificação Binária" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
-      <RadioButton fx:id="radioButtonManchester" layoutX="98.0" layoutY="519.0" mnemonicParsing="false" onAction="#handleButtonManchester" text="Codificação Manchester" textFill="WHITE">
+      <RadioButton fx:id="radioButtonManchester" layoutX="58.0" layoutY="525.0" mnemonicParsing="false" onAction="#handleButtonManchester" text="Codificação Manchester" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
-      <RadioButton fx:id="radioButtonManchesterDiferencial" layoutX="98.0" layoutY="555.0" mnemonicParsing="false" onAction="#handleButtonManchesterDiferencial" text="Codificação Manchester Diferencial" textFill="WHITE">
+      <RadioButton fx:id="radioButtonManchesterDiferencial" layoutX="58.0" layoutY="561.0" mnemonicParsing="false" onAction="#handleButtonManchesterDiferencial" text="Codificação Manchester Diferencial" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="15.0" />
          </font>
       </RadioButton>
-      <Button fx:id="buttonEnviar" layoutX="602.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleButtonEnviar" style="-fx-background-color: #1cb241;" text="Enviar" textFill="WHITE">
+      <Button fx:id="buttonEnviar" layoutX="362.0" layoutY="162.0" mnemonicParsing="false" onAction="#handleButtonEnviar" style="-fx-background-color: #1cb241;" text="Enviar" textFill="WHITE">
          <font>
             <Font name="Arial" size="18.0" />
          </font>
       </Button>
+      <RadioButton fx:id="radioButtonContagemCaracteres" layoutX="454.0" layoutY="487.0" mnemonicParsing="false" onAction="#handleButtonContagemCaracteres" text="Contagem de Caracteres" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="radioButtonInsercaoBytes" layoutX="454.0" layoutY="523.0" mnemonicParsing="false" onAction="#handleButtonInsercaoBytes" text="Inserção de Bytes" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="radioButtonInsercaoBits" layoutX="454.0" layoutY="559.0" mnemonicParsing="false" onAction="#handleButtonInsercaoBits" text="Inserção de Bits" textFill="WHITE">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="radioButtonViolacaoCamadaFisica" layoutX="627.0" layoutY="504.0" mnemonicParsing="false" onAction="#handleButtonViolacaoCamadaFisica" prefHeight="64.0" prefWidth="117.0" text="Violação da camada física" textFill="WHITE" wrapText="true">
+         <font>
+            <Font name="Arial Bold" size="15.0" />
+         </font>
+      </RadioButton>
    </children>
 </AnchorPane>

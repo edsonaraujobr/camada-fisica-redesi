@@ -117,19 +117,35 @@ public class PrincipalController implements Initializable {
   @FXML
   private TextArea textAreaTransmissor;
   
+  @FXML
+  private ImageView imgQuadrosButtons;
+  
+  @FXML
+  private RadioButton radioButtonViolacaoCamadaFisica;
+  @FXML
+  private RadioButton radioButtonContagemCaracteres;
+  @FXML
+  private RadioButton radioButtonInsercaoBits;
+  @FXML
+  private RadioButton radioButtonInsercaoBytes;
+  
   ToggleGroup grupoRadioTipoDeCodificacao;
+  ToggleGroup grupoRadioTipoDeEnquadramento;
   
   AplicacaoTransmissora aplicacaoTransmissora;
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
+  CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora;
   CamadaFisicaTransmissora camadaFisicaTransmissora;
   
   MeioDeComunicacao meioDeComunicacao;
   
   CamadaFisicaReceptora camadaFisicaReceptora;
   CamadaAplicacaoReceptora camadaAplicacaoReceptora;
+  CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora;
   AplicacaoReceptora aplicacaoReceptora;
   
   int tipoDeCodificacao = -1;
+  int tipoDeEnquadramento = -1;
   
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -138,6 +154,12 @@ public class PrincipalController implements Initializable {
     radioButtonManchester.setToggleGroup(grupoRadioTipoDeCodificacao);
     radioButtonManchesterDiferencial.setToggleGroup(grupoRadioTipoDeCodificacao);
 
+    grupoRadioTipoDeEnquadramento = new ToggleGroup();
+    radioButtonContagemCaracteres.setToggleGroup(grupoRadioTipoDeEnquadramento);
+    radioButtonInsercaoBits.setToggleGroup(grupoRadioTipoDeEnquadramento);
+    radioButtonInsercaoBytes.setToggleGroup(grupoRadioTipoDeEnquadramento);
+    radioButtonViolacaoCamadaFisica.setToggleGroup(grupoRadioTipoDeEnquadramento);
+    
     instanciarCamadas();
    
   } // fim metodoInitialize
@@ -147,23 +169,24 @@ public class PrincipalController implements Initializable {
     camadaAplicacaoTransmissora = new CamadaAplicacaoTransmissora();
     aplicacaoTransmissora.setCamadaAplicacaoTransmissora(camadaAplicacaoTransmissora);
   
-    camadaFisicaTransmissora = new CamadaFisicaTransmissora();
-    camadaAplicacaoTransmissora.setCamadaFisicaTransmissora(camadaFisicaTransmissora);
+    camadaEnlaceDadosTransmissora = new CamadaEnlaceDadosTransmissora();
+    camadaAplicacaoTransmissora.setCamadaEnlaceDadosTransmissora(camadaEnlaceDadosTransmissora);
 
+    camadaFisicaTransmissora = new CamadaFisicaTransmissora();
+    camadaEnlaceDadosTransmissora.setCamadaFisicaTransmissora(camadaFisicaTransmissora);
+    
     camadaFisicaTransmissora.setPrincipalController(this); // setar o controle para esse proprio.
-    
     meioDeComunicacao = new MeioDeComunicacao();
-    
     camadaFisicaTransmissora.setMeioDeComunicacao(meioDeComunicacao);
     
     camadaFisicaReceptora = new CamadaFisicaReceptora();
-    
     meioDeComunicacao.setCamadaFisicaReceptora(camadaFisicaReceptora);
     
+    camadaEnlaceDadosReceptora = new CamadaEnlaceDadosReceptora();
+    camadaFisicaReceptora.setCamadaEnlaceDadosReceptora(camadaEnlaceDadosReceptora);
+    
     camadaAplicacaoReceptora = new CamadaAplicacaoReceptora();
-    
-    camadaFisicaReceptora.setAplicacaoReceptora(camadaAplicacaoReceptora);
-    
+    camadaEnlaceDadosReceptora.setCamadaAplicacaoReceptora(camadaAplicacaoReceptora);
     aplicacaoReceptora = new AplicacaoReceptora();
     
     camadaAplicacaoReceptora.setAplicacaoReceptora(aplicacaoReceptora);
@@ -224,6 +247,26 @@ public class PrincipalController implements Initializable {
   @FXML
   void handleButtonManchesterDiferencial(ActionEvent event) {
     tipoDeCodificacao = 2;
+  }
+  
+  @FXML
+  void handleButtonContagemCaracteres(ActionEvent event) {
+    tipoDeEnquadramento = 0;
+  }
+  
+  @FXML
+  void handleButtonInsercaoBytes(ActionEvent event) {
+    tipoDeEnquadramento = 1;
+  }
+  
+  @FXML
+  void handleButtonInsercaoBits(ActionEvent event) {
+    tipoDeEnquadramento = 2;
+  }
+
+  @FXML
+  void handleButtonViolacaoCamadaFisica(ActionEvent event) {
+    tipoDeEnquadramento = 3;
   }
   
   public void exibirMensagemReceptor(String mensagem){

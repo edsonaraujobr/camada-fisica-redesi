@@ -14,6 +14,8 @@ import controller.PrincipalController;
 public class CamadaFisicaTransmissora {
   MeioDeComunicacao meioDeComunicacao;
   PrincipalController principalController;
+  static boolean manchesterDiferencialPrimeiroBit = true; // para diferenciar o primeiro bit
+  static char ultimoBitLido;
   
   public void enviarDado(int quadro[], int tipoDeCodificacao){
     int fluxoBrutoDeBits[] = {};
@@ -40,12 +42,29 @@ public class CamadaFisicaTransmissora {
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoManchester (int quadro []) {
-    principalController.exibirSinaisManchester(quadro);
+    /*principalController.exibirSinaisManchester(quadro);
+    for(int i = 0; i < quadro.length; i++) {
+      quadro[i] = inserirBitManchester(stringDeBits, quadro[i]);
+
+      if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
+        stringDeBits = removerBitsLidos(stringDeBits, 32);
+      }
+    } */
     return quadro;
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
-     principalController.exibirSinaisManchesterDiferencial(quadro);
+    /*principalController.exibirSinaisManchesterDiferencial(quadro);
+    for(int i = 0; i < quadro.length; i++) {
+      quadro[i] = inserirBitManchesterDiferencial(stringDeBits, quadro[i]);
+
+      if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
+
+        stringDeBits = removerBitsLidos(stringDeBits, 32); // preciso do ultimo como informacao
+
+      }
+    }    
+    manchesterDiferencialPrimeiroBit = true;*/
     return quadro;
   }
    
