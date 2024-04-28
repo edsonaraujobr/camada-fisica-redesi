@@ -27,7 +27,7 @@ public class Principal  extends Application {
   
   @Override
   public void start(Stage primaryStage) throws Exception {
-    primaryStage.setTitle("Trabalho de Redes I: Camada Física");
+    primaryStage.setTitle("Trabalho de Redes II: Camada Enlace de Dados");
     Parent root = FXMLLoader.load(getClass().getResource("/view/interface.fxml"));
     scene = new Scene(root);
     Image icon = new Image("/img/icon.png");  // Carregando o ícone da janela
