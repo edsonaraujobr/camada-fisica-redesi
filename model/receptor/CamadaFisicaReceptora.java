@@ -13,7 +13,7 @@ package model.receptor;
 public class CamadaFisicaReceptora {
   CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora;
   
-  public void receberDado(int quadro [], int tipoDeCodificacao){
+  public void receberDado(int quadro [], int tipoDeCodificacao, int tipoDeEnquadramento){
     int fluxoBrutoDeBits[] = {};
     
     switch(tipoDeCodificacao) {
@@ -30,7 +30,7 @@ public class CamadaFisicaReceptora {
         break;
         
     }
-    camadaEnlaceDadosReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao);
+    camadaEnlaceDadosReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao, tipoDeEnquadramento);
     
     System.out.println("Na camada Fisica Receptora");
     for(int i = 0; i < fluxoBrutoDeBits.length; i++) {
@@ -88,8 +88,47 @@ public class CamadaFisicaReceptora {
   }
   
    public int[] camadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro []) {
+    // transformar de manchester para binario
+     
     int novoQuadro[] = new int [quadro.length/2]; 
+    int posicao = 0;
+    int displayMask = 1 << 31; // 10000000 00000000 00000000 0000000
+    boolean primeiroBit = true;
+    int ultimoBitLido;
     
-    return quadro;
+    // primeiros dois bits são especiais
+    if((quadro[0] & displayMask) != 0) { // os dois primeiros bits eh 10
+      novoQuadro[0] |= (1 << (31));  
+      ultimoBitLido = 0;
+    } else {  // os dois primeiros bits eh 01
+      ultimoBitLido = 1;
+    }
+    quadro[0] <<=2;
+    
+    
+    for(int y = 0; y < novoQuadro.length; y++) {
+      for (int x = y, passo = ( primeiroBit ? 1 : 0 ) ; x < y+2; x++) { // para cada quadro, preciso ler dois
+        for(int z = ( primeiroBit ? 1 : 0 ); z < 16; z++) { 
+          // em um quadro inteiro de manchester, tenho metade em binario
+          if ((quadro[posicao] & displayMask) != 0 && ultimoBitLido == 1) { // o bit é 1 (nao tem transicao)
+            //System.out.println("Em quadro: " + y +" e no bit: " + z + "É igual a 1");
+            novoQuadro[y] |= (1 << (31 - passo)); 
+            ultimoBitLido = 0;
+          } else if((quadro[posicao] & displayMask) == 0 && ultimoBitLido == 0) { // o bit é 1 (nao tem transicao)
+            novoQuadro[y] |= (1 << (31 - passo));  
+            ultimoBitLido = 1;
+          }
+
+          ++passo;
+          quadro[posicao] <<= 2;
+
+        }
+        primeiroBit = false;
+        ++posicao;
+      }    
+    
+    }
+    
+    return novoQuadro;
   }
 }

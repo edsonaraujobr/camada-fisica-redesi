@@ -15,7 +15,7 @@ public class MeioDeComunicacao {
   CamadaFisicaReceptora camadaFisicaReceptora;
   
   // mover do ponto A para o B.
-  public void enviarDado( int fluxoBrutoDeBits[], int tipoDeCodificacao) {
+  public void enviarDado( int fluxoBrutoDeBits[], int tipoDeCodificacao, int tipoDeEnquadramento) {
     int fluxoBrutoDeBitsPontoA[], fluxoBrutoDeBitsPontoB[];
     
     fluxoBrutoDeBitsPontoA = fluxoBrutoDeBits;
@@ -31,7 +31,7 @@ public class MeioDeComunicacao {
       }
     }
 
-    camadaFisicaReceptora.receberDado(fluxoBrutoDeBitsPontoB, tipoDeCodificacao);
+    camadaFisicaReceptora.receberDado(fluxoBrutoDeBitsPontoB, tipoDeCodificacao, tipoDeEnquadramento);
   } // fim metodo enviar dado
   
   public void setCamadaFisicaReceptora(CamadaFisicaReceptora camadaFisicaReceptora) {

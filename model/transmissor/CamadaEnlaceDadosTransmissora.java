@@ -4,15 +4,12 @@ public class CamadaEnlaceDadosTransmissora {
   
   CamadaFisicaTransmissora camadaFisicaTransmissora;
 
-  public void enviarDado(int quadro [], int tipoDeCodificacao) {
-    /*enquadramento(quadro, tipoDeCodificacao);
-    controleDeErro(quadro);
-    controleDeFluxo(quadro);*/
-    camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao);
+  public void enviarDado(int quadro [], int tipoDeCodificacao, int tipoDeEnquadramento) {
+    enquadramento(quadro, tipoDeCodificacao);
+    camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao, tipoDeEnquadramento);
   }
   
-  /*public void enquadramento(int quadro [], int tipoDeEnquadramento) {
-    int tipoDeEnquadramento= 0; //alterar de acordo com o teste
+  public void enquadramento(int quadro [], int tipoDeEnquadramento) {
     int quadroEnquadrado [];
     switch (tipoDeEnquadramento) {
       case 0 : //contagem de caracteres
@@ -46,12 +43,12 @@ public class CamadaEnlaceDadosTransmissora {
   }
   
   public void controleDeErro(int quadro []) {
-    
+    // nao sera implementado neste momento
   }
   
   public void controleDeFluxo(int quadro []) {
-    
-  }*/
+    // nao sera implementado neste momento
+  }
   
   public void setCamadaFisicaTransmissora(CamadaFisicaTransmissora camadaFisicaTransmissora) {
     this.camadaFisicaTransmissora = camadaFisicaTransmissora;

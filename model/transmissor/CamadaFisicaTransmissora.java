@@ -15,7 +15,7 @@ public class CamadaFisicaTransmissora {
   MeioDeComunicacao meioDeComunicacao;
   PrincipalController principalController;
 
-  public void enviarDado(int quadro[], int tipoDeCodificacao){
+  public void enviarDado(int quadro[], int tipoDeCodificacao, int tipoDeEnquadramento){
     int fluxoBrutoDeBits[] = {};
     
     switch(tipoDeCodificacao) {
@@ -37,7 +37,7 @@ public class CamadaFisicaTransmissora {
       imprimirBits(fluxoBrutoDeBits[i]);
       System.out.println();
     }
-    meioDeComunicacao.enviarDado(fluxoBrutoDeBits, tipoDeCodificacao);
+    meioDeComunicacao.enviarDado(fluxoBrutoDeBits, tipoDeCodificacao, tipoDeEnquadramento);
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {

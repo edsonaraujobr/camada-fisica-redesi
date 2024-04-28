@@ -4,14 +4,12 @@ public class CamadaEnlaceDadosReceptora {
   
   CamadaAplicacaoReceptora camadaAplicacaoReceptora;
 
-  public void receberDado(int quadro [], int tipoDeCodificacao) {
-    /*enquadramento(quadro, tipoDeCodificacao);
-    controleDeErro(quadro);
-    controleDeFluxo(quadro);*/
+  public void receberDado(int quadro [], int tipoDeCodificacao, int tipoDeEnquadramento) {
+    enquadramento(quadro, tipoDeCodificacao);
     camadaAplicacaoReceptora.receberDado(quadro, tipoDeCodificacao);
   }
   
-  /*public void enquadramento(int quadro [], int tipoDeEnquadramento) {
+  public void enquadramento(int quadro [], int tipoDeEnquadramento) {
     int quadroEnquadrado [];
     switch (tipoDeEnquadramento) {
       case 0 : //contagem de caracteres
@@ -45,12 +43,12 @@ public class CamadaEnlaceDadosReceptora {
   }
   
   public void controleDeErro(int quadro []) {
-    
+    // sera implementado em outro momento
   }
   
   public void controleDeFluxo(int quadro []) {
-    
-  }*/
+    // sera implementado em outro momento
+  }
   
   public void setCamadaAplicacaoReceptora(CamadaAplicacaoReceptora camadaAplicacaoReceptora) {
     this.camadaAplicacaoReceptora = camadaAplicacaoReceptora;

@@ -197,16 +197,22 @@ public class PrincipalController implements Initializable {
   @FXML
   void handleButtonEnviar(ActionEvent event) {
     if(buttonEnviar.getText().equals("Enviar")) {
-      if(grupoRadioTipoDeCodificacao.getSelectedToggle() != null && !textAreaTransmissor.getText().equals("")) {
+      if(grupoRadioTipoDeCodificacao.getSelectedToggle() != null && grupoRadioTipoDeEnquadramento.getSelectedToggle() != null  && !textAreaTransmissor.getText().equals("")) {
         labelAviso.setVisible(false);
         imageDemarcacaoSinais.setVisible(true);
         buttonEnviar.setText("Aguarde");
-        aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao);
+        aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao, tipoDeEnquadramento);
         buttonEnviar.setStyle("-fx-background-color:  #E1AF00"); // button fica amarelo
         textAreaTransmissor.setEditable(false); // nao permite editar
         radioButtonCodificacaoBinaria.setDisable(true);
         radioButtonManchester.setDisable(true);
         radioButtonManchesterDiferencial.setDisable(true);
+        
+        radioButtonContagemCaracteres.setDisable(true);
+        radioButtonInsercaoBytes.setDisable(true);
+        radioButtonInsercaoBits.setDisable(true);
+        radioButtonViolacaoCamadaFisica.setDisable(true);
+        
 
       } else { // nao selecionou uma codificacao ou digitou no text area
         labelAviso.setVisible(true);
@@ -223,6 +229,10 @@ public class PrincipalController implements Initializable {
       radioButtonCodificacaoBinaria.setDisable(false);
       radioButtonManchester.setDisable(false);
       radioButtonManchesterDiferencial.setDisable(false);
+      radioButtonContagemCaracteres.setDisable(false);
+      radioButtonInsercaoBytes.setDisable(false);
+      radioButtonInsercaoBits.setDisable(false);
+      radioButtonViolacaoCamadaFisica.setDisable(false);
     }
 
   } // fim metodo handleButtonEnviar

@@ -12,7 +12,7 @@ package model.transmissor;
 public class CamadaAplicacaoTransmissora {
   CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora;
   
-  public void enviarDado(String mensagem, int tipoDeCodificacao) {
+  public void enviarDado(String mensagem, int tipoDeCodificacao, int tipoDeEnquadramento) {
     char arrayCaracteres[] = mensagem.toCharArray();
     
     int quadro[] = new int [retornarTamanho( arrayCaracteres.length)];
@@ -37,7 +37,7 @@ public class CamadaAplicacaoTransmissora {
       System.out.println();
     }
 
-    camadaEnlaceDadosTransmissora.enviarDado(quadro, tipoDeCodificacao);
+    camadaEnlaceDadosTransmissora.enviarDado(quadro, tipoDeCodificacao, tipoDeEnquadramento);
   } // fim metodo enviarDado
   
   public void imprimirBits(int quadro) {

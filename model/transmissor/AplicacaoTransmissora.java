@@ -13,8 +13,8 @@ package model.transmissor;
 public class AplicacaoTransmissora {
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
 
-  public void enviarDado (String mensagem, int tipoDeCodificacao) {
-    camadaAplicacaoTransmissora.enviarDado(mensagem, tipoDeCodificacao);
+  public void enviarDado (String mensagem, int tipoDeCodificacao, int tipoEnquadramento ) {
+    camadaAplicacaoTransmissora.enviarDado(mensagem, tipoDeCodificacao, tipoEnquadramento);
   }
   
   public void setCamadaAplicacaoTransmissora(CamadaAplicacaoTransmissora camadaAplicacaoTransmissora) {
