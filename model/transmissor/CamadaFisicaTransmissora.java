@@ -41,7 +41,7 @@ public class CamadaFisicaTransmissora {
   }
   
   public int[] camadaFisicaTransmissoraCodificacaoBinaria (int quadro []) {
-    principalController.exibirSinaisBinarios(quadro);
+    //principalController.exibirSinaisBinarios(quadro);
     return quadro; 
   }
   

@@ -85,8 +85,95 @@ public class CamadaEnlaceDadosReceptora {
   }
   
   public int [] insercaoDeBytes (int quadro []) {
-    int quadro2[] = {1,2};
-    return quadro2;  
+    int novoQuadro[] = new int [quadro.length / 4];
+    
+    int displayMask = 1 << 31; 
+    String resultadoBits = "";
+    String start = "01010011";
+    String end =  "01000101";
+    String esc = "01111100";
+    int contadorEscape = 0;
+    int passo = 31;
+    boolean byteEnd = false;
+    int contadorNovoQuadro = 0;
+    
+    for(int y = 0; y < quadro.length; y++) {
+      for(int i = 0; i < 32 && !byteEnd; i++) {
+        
+        if ((quadro[y] & displayMask) != 0) { // eh 1
+        resultadoBits += "1";
+        } else { // eh 0
+          resultadoBits += "0";
+        }
+        quadro[y] <<=1;
+        
+        if((i+1) % 8 == 0) { // li um byte 
+          System.out.println("Resultado dos bits: " + resultadoBits);
+          if(resultadoBits.equals("00000000")) { // li um byte vazio
+            resultadoBits = "";
+            byteEnd = true;
+            break; // nao posso sair do segundo for pois ha casos em que os oito ultimos bits sao nulos mas tenho mais bits em outras posicoes do quadro
+          }
+          switch(resultadoBits) {
+            case "01111100": // "|"
+              if(contadorEscape == 1) {
+                // insiro os 8 bits
+                for(int pos = 0; pos < 8; pos++) { 
+                  if(resultadoBits.charAt(pos) == '1')
+                    novoQuadro[contadorNovoQuadro] |= (1 << passo);
+                  --passo;
+                }                
+                contadorEscape = 0;                
+              } else {
+                ++contadorEscape;
+              }
+              break;
+            case "01010011": // "S"
+              if(contadorEscape == 1) { // nao eh o byte de flag
+                // insere os 8 bits
+                for(int pos = 0; pos < 8; pos++) { 
+                  if(resultadoBits.charAt(pos) == '1')
+                    novoQuadro[contadorNovoQuadro] |= (1 << passo);
+                  --passo;
+                }                
+                contadorEscape = 0;
+              } 
+              break;
+            case "01000101": // "E"
+              if(contadorEscape == 1) { // nao eh o byte de flag
+                // insere os 8 bits
+                for(int pos = 0; pos < 8; pos++) { 
+                  if(resultadoBits.charAt(pos) == '1')
+                    novoQuadro[contadorNovoQuadro] |= (1 << passo);
+                  --passo;
+                }                
+                contadorEscape = 0;
+              } else { // eh byte de flag
+                // vou para proximo quadro
+                byteEnd = true;
+              }
+              break;
+            default:
+              for(int pos = 0; pos < 8; pos++) { 
+                if(resultadoBits.charAt(pos) == '1')
+                  novoQuadro[contadorNovoQuadro] |= (1 << passo);
+                System.out.println("Passo: " + passo);
+                --passo;
+              }    
+              break;
+          } // fim switch
+          if(passo == -1) {
+            passo = 31;
+            ++contadorNovoQuadro;
+          }
+          resultadoBits = "";
+        } // fim if li um byte
+
+      } // fim for 32 bits
+      byteEnd = false;
+    } // fim for quadro
+    
+    return novoQuadro;  
   }
   
   public int [] insercaoDeBits (int quadro []) {
