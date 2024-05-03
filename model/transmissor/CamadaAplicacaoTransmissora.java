@@ -18,15 +18,12 @@ public class CamadaAplicacaoTransmissora {
     int quadro[] = new int [retornarTamanho( arrayCaracteres.length)];
     String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres);
     
-    System.out.println("String de bits antes: " + stringDeBits);
-    
     for(int i = 0; i < quadro.length; i++) {
       System.out.println("Quadro: " + quadro[i]);
       quadro[i] = inserirBitBinario(stringDeBits, quadro[i]);
 
       if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
         stringDeBits = removerBitsLidos(stringDeBits, 32);
-        System.out.println("String de bits pos remover: " + stringDeBits);
       }
     }   
     
@@ -57,6 +54,8 @@ public class CamadaAplicacaoTransmissora {
         char bit = stringDeBits.charAt(index); 
         if (bit == '1' ) 
           inteiro |= (1 << (31 - index));
+      } else {
+        break;
       }
     }
     return inteiro;

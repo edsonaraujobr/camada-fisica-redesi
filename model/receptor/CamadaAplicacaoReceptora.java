@@ -12,7 +12,7 @@ package model.receptor;
 public class CamadaAplicacaoReceptora {
   AplicacaoReceptora aplicacaoReceptora;
   
-  public void receberDado(int quadro[], int tipoDeCodificacao){
+  public void receberDado(int quadro[]){
     String mensagem = "";
 
     for(int i = 0; i < quadro.length; i++) { 

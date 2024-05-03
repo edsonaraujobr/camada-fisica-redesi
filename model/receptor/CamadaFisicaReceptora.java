@@ -30,13 +30,14 @@ public class CamadaFisicaReceptora {
         break;
         
     }
-    camadaEnlaceDadosReceptora.receberDado(fluxoBrutoDeBits, tipoDeCodificacao, tipoDeEnquadramento);
-    
-    System.out.println("Na camada Fisica Receptora");
+
+    System.out.println("\nNa camada Fisica Receptora");
     for(int i = 0; i < fluxoBrutoDeBits.length; i++) {
       imprimirBits(fluxoBrutoDeBits[i]);
       System.out.println();
     }
+    
+    camadaEnlaceDadosReceptora.receberDado(fluxoBrutoDeBits, tipoDeEnquadramento);
   }
   
   public void imprimirBits(int quadro) {

@@ -5,12 +5,31 @@ public class CamadaEnlaceDadosTransmissora {
   CamadaFisicaTransmissora camadaFisicaTransmissora;
 
   public void enviarDado(int quadro [], int tipoDeCodificacao, int tipoDeEnquadramento) {
-    enquadramento(quadro, tipoDeCodificacao);
-    camadaFisicaTransmissora.enviarDado(quadro, tipoDeCodificacao, tipoDeEnquadramento);
+    int quadroEnquadrado[] = enquadramento(quadro, tipoDeEnquadramento);
+
+    System.out.println("Na camada Enlace de Dados Transmissora");
+    for(int i = 0; i < quadroEnquadrado.length; i++) {
+      System.out.println("QuadroEnquadrado: "+ i);
+      imprimirBits(quadroEnquadrado[i]);
+      System.out.println();
+    }
+    
+    camadaFisicaTransmissora.enviarDado(quadroEnquadrado, tipoDeCodificacao, tipoDeEnquadramento);
   }
   
-  public void enquadramento(int quadro [], int tipoDeEnquadramento) {
-    int quadroEnquadrado [];
+  public void imprimirBits(int quadro) {
+    int displayMask = 1 << 31; // 10000000 00000000 00000000 0000000
+    for (int i = 1; i <= 32 ; i++) { // da direita para esquerda.
+      System.out.print((quadro & displayMask) == 0 ? "0" : "1");
+      quadro <<= 1; // desloca o valor uma posição a esquerda é oq permite q seja verificado bit a bit
+      
+      if (i % 8 == 0) //exibe espaço a cada 8 bits
+        System.out.print(" ");
+    }    
+  }
+  
+  public int [] enquadramento(int quadro [], int tipoDeEnquadramento) {
+    int quadroEnquadrado [] = {};
     switch (tipoDeEnquadramento) {
       case 0 : //contagem de caracteres
         quadroEnquadrado = contagemDeCaracteres(quadro);
@@ -25,21 +44,332 @@ public class CamadaEnlaceDadosTransmissora {
         quadroEnquadrado = violacaoCamadaFisica(quadro);
         break;
     }//fim do switch/case
+    
+    return quadroEnquadrado;
   }
   
   public int [] contagemDeCaracteres (int quadro []) {
+    int novoQuadro [] = new int[quadro.length * 2]; // pior dos casos tenho o dobro 
+
+    int posicaoNovoQuadro = 0;
+    int displayMask = 1 << 31; 
+    int passo = 8;
+    int contadorCaractere = 1;
+    int contadorBitsNull = 0;
+    
+    for (int y = 0; y < quadro.length; y++) {
+      
+      for (int i = 0; i < 32; i++) { 
+        
+        if ((quadro[y] & displayMask) != 0) { // eh 1
+          novoQuadro[posicaoNovoQuadro] |= (1 << (31 - passo));    
+        } else { // eh 0
+          ++contadorBitsNull;
+        }
+        
+        ++passo;
+        
+        if(((i+1) % 8 == 0) && contadorBitsNull != 8) { // cada 8 bits temos 1 caractere
+          ++contadorCaractere;         
+          contadorBitsNull = 0; // nao veio byte null
+        } else if(((i+1) % 8 == 0) && contadorBitsNull == 8) { // 8 bits nulos (nao ha informacao)
+          break;
+        }
+        
+        if(passo == 32) { // temos três caracteres sem contar o de controle, logo vamos coloca-lo no novo quadro e ir pro proximo index
+          for (int j = 7, pos = 0; j >= 0; j--, pos++) {
+            int bit = (contadorCaractere >> j) & 1;
+
+            if (((contadorCaractere >> j) & 1) == 1) {
+              novoQuadro[posicaoNovoQuadro] |= (1 << (31 - pos));
+            }
+          }              
+          ++posicaoNovoQuadro;
+          contadorCaractere = 1;
+          passo = 8;
+        }
+        
+        quadro[y] <<= 1;
+      }
+      
+      // insiro o contador caractere nos 8 primeiros bits.
+    }
+    if(contadorCaractere > 1) { // teve um caractere
+      for (int j = 7, pos = 0; j >= 0; j--, pos++) {
+       int bit = (contadorCaractere >> j) & 1;
+
+       if (((contadorCaractere >> j) & 1) == 1) {
+           novoQuadro[posicaoNovoQuadro] |= (1 << (31 - pos));
+       }
+      }             
+    }
+
+    return novoQuadro;
+  
   }
   
-  public int [] insercaoDeBytes (int quadro []) {
+  /*public int calcularQuadroInsercaoBytes(int quadro []) {
+    int quadroAuxiliar [] = quadro;
+    int contadorTamanhoBytes = 0;
+    int contadorQuadros = 0;
+    int contadorBitsNull = 0;
+    char resultado;
+    int displayMask = 1 << 31; 
+    int byteAtual = 0;      
+      
+    for(int i = 0; i < quadro.length * 32; i++) {
+      
+      if ((quadroAuxiliar[contadorQuadros] & displayMask) != 0) { // eh 1
+        byteAtual = (byteAtual << 1) | 1;
+      } else {
+        byteAtual = (byteAtual << 1) | 0;
+        ++contadorBitsNull;
+      }
+      quadroAuxiliar[contadorQuadros] <<= 1; 
+      
+      if((i + 1) % 8 == 0) {
+        if(contadorBitsNull == 8) {
+          break;
+        } else {
+          contadorBitsNull = 0;
+          
+          resultado = (char) byteAtual;
+          if(resultado == 'S' || resultado == 'E' || resultado == '|' ) {
+            contadorTamanhoBytes += 2;
+          } else {
+            ++contadorTamanhoBytes;
+          }
+          byteAtual = 0;
+        }
+
+      } 
+      if((i+1)% 32 == 0) {
+        ++contadorQuadros;
+      }
+    }
+    
+    int contadorTamanhoNovoQuadro =(contadorTamanhoBytes*2 % 4 == 0 ? contadorTamanhoBytes*2 / 4 : (contadorTamanhoBytes*2 / 4) + 1);   // 2 dos caracteres START e END, 4 pois em um quadro vou por quatro caracteres contando o de controle.
+    return contadorTamanhoNovoQuadro;
+  }*/
   
+  public int [] insercaoDeBytes (int quadro []) {
+    int novoQuadro [] = new int[quadro.length * 4]; // pior dos casos 
+    System.out.println("O tamanho do quadro é: " + novoQuadro.length);
+    
+    int displayMask = 1 << 31; 
+    int contadorIndexQuadroNovo = 0;
+    int contadorIndexQuadroAnterior = 0;
+    int passo = 23;
+    String resultadoBits = "";
+    String start = "01010011";
+    String end =  "01000101";
+    String esc = "01111100";
+    int contadorCaractere = 0;
+    int index = 0;
+    
+    for(int y = 0; y < quadro.length*32; y++) {
+      if ((quadro[contadorIndexQuadroAnterior] & displayMask) != 0) { // eh 1
+        resultadoBits += "1";
+      } else { // eh 0
+        resultadoBits += "0";
+      }
+      
+      quadro[contadorIndexQuadroAnterior] <<=1;
+
+      
+      if((y+1) % 8 == 0) { // li um byte
+        System.out.println("Resultado Bits: " + resultadoBits);
+        if(resultadoBits.equals("00000000")) { // li um byte vazio
+          break;
+        }
+        if((y+1) % 32 == 0) {
+          ++contadorIndexQuadroAnterior;
+        }
+        switch(resultadoBits) {
+          case "01010011": // "S"
+          case "01000101": // "E"
+          case "01111100": // "|"
+            if(contadorCaractere > 0) { // ja tivemos um caractere lido
+              
+              for(int i = 31; i > 23; i--) { // coloco S nos oito primeiros bits
+                if(start.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+                ++index;
+              }
+              index = 0;
+
+              for(int i = 15; i > 7; i--) { // coloco E nos oito ultimos bits
+                if(end.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+                ++index;
+              }   
+              index = 0;
+              
+              ++contadorIndexQuadroNovo; // vou para o proximo quadro
+              // coloco start, escape, o caractere e end.
+              
+              for(int i = 31; i > 23; i--) { // coloco S nos oito primeiros bits
+                if(start.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);   
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 23; i > 15; i--) { // coloco o escape
+                if(esc.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 15; i > 7; i--) { // coloco o caractere
+                if(resultadoBits.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 7; i >= 0; i--) { // coloco E nos oito ultimos bits
+                if(end.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i); 
+                index++;
+              }       
+              index = 0;
+              
+              ++contadorIndexQuadroNovo; // vou para o proximo
+              contadorCaractere = 0;
+              
+            } else { // nenhum caractere lido
+              // coloco start, escape, o caractere, end
+              for(int i = 31; i > 23; i--) { // coloco S nos oito primeiros bits
+                if(start.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 23; i > 15; i--) { // coloco o escape
+                if(esc.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 15; i > 7; i--) { // coloco o caractere
+                if(resultadoBits.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);
+                ++index;
+              }
+              index = 0;
+              
+              for(int i = 7; i >= 0; i--) { // coloco E nos oito ultimos bits
+                if(end.charAt(index) == '1')
+                  novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+                ++index;
+              }         
+              index = 0;
+              
+              // vou para o proximo quadro
+              ++contadorIndexQuadroNovo;
+            }
+            break;
+          default: // coloco os oito bits e vou para o proximo.
+            for(int i = 0; i < 8; i++) { 
+              if(resultadoBits.charAt(i) == '1')
+                novoQuadro[contadorIndexQuadroNovo] |= (1 << passo);
+              --passo;
+            }
+            ++contadorCaractere;
+            break;
+        }
+
+        resultadoBits = "";
+      }
+      
+      if(contadorCaractere == 2 ) {
+        // li dois caracteres que nao precisam do escape
+        for(int i = 31; i > 23; i--) { // coloco S
+          if(start.charAt(index) == '1')
+            novoQuadro[contadorIndexQuadroNovo] |= (1 << i);   
+          ++index;
+        }
+        index = 0;
+        
+        for(int i = 7; i >= 0; i--) { // coloco E
+          if(end.charAt(index) == '1')
+            novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+          ++index;
+        }
+        index = 0;
+        
+        ++contadorIndexQuadroNovo; //vou para novo quadro     
+        contadorCaractere = 0;
+        passo = 23;
+      }
+ 
+    }
+    // se apos o for, tiver um caractere sem estar enquadrado
+    if(contadorCaractere > 0) {
+        for(int i = 31; i > 23; i--) { // coloco S
+          if(start.charAt(index) == '1')
+            novoQuadro[contadorIndexQuadroNovo] |= (1 << i);   
+          ++index;
+        }
+        index = 0;
+        
+        for(int i = 15; i > 7; i--) { // coloco E
+          if(end.charAt(index) == '1')
+            novoQuadro[contadorIndexQuadroNovo] |= (1 << i);  
+          ++index;
+        }      
+    }
+    
+    
+
+    // digitar u
+    // S u E // 1 quadro
+    
+    // digitar ue
+    // S u e E // 1 quadro
+    
+    // digitar ues
+    // S u e s
+    // E // dous quadros
+    
+    // digitar uesb
+    // S u e s
+    // b E // dois quadros
+    
+    // digitar S
+    // S | S E // 1 quadro
+    
+    // digitar SS
+    // S | S |
+    // S E // dois quadros
+    
+    // Digitar SSS
+    // S | S | 
+    // S | S E // dois quadros
+    
+    // digitar SSSS
+    // S | S | 
+    // S | S |
+    // S E // três quadros
+    
+    
+    
+    
+    return novoQuadro;
   }
   
   public int [] insercaoDeBits (int quadro []) {
-    
+    int quadro2[] = {1,2};
+    return quadro2;   
   }
   
   public int [] violacaoCamadaFisica(int quadro []) {
-    
+    int quadro2[] = {1,2};
+    return quadro2;   
   }
   
   public void controleDeErro(int quadro []) {

@@ -9,26 +9,33 @@
 
 package controller;
 
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import model.receptor.*;
 import model.transmissor.*;
 import model.MeioDeComunicacao;
 
 public class PrincipalController implements Initializable {
+  
+  @FXML
+  private ChoiceBox<String> boxTipoCodificacao;
+  @FXML
+  private ChoiceBox<String> boxTipoEnquadramento;
+
   @FXML
   private Label labelAviso;
       
@@ -104,33 +111,11 @@ public class PrincipalController implements Initializable {
   private ImageView imgManchesterBaixoAlto07;
   @FXML
   private ImageView imgManchesterBaixoAlto08;
-
-  @FXML
-  private RadioButton radioButtonCodificacaoBinaria;
-  @FXML
-  private RadioButton radioButtonManchester;
-  @FXML
-  private RadioButton radioButtonManchesterDiferencial;
   
   @FXML
   private TextArea textAreaReceptor;
   @FXML
   private TextArea textAreaTransmissor;
-  
-  @FXML
-  private ImageView imgQuadrosButtons;
-  
-  @FXML
-  private RadioButton radioButtonViolacaoCamadaFisica;
-  @FXML
-  private RadioButton radioButtonContagemCaracteres;
-  @FXML
-  private RadioButton radioButtonInsercaoBits;
-  @FXML
-  private RadioButton radioButtonInsercaoBytes;
-  
-  ToggleGroup grupoRadioTipoDeCodificacao;
-  ToggleGroup grupoRadioTipoDeEnquadramento;
   
   AplicacaoTransmissora aplicacaoTransmissora;
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
@@ -149,16 +134,10 @@ public class PrincipalController implements Initializable {
   
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    grupoRadioTipoDeCodificacao = new ToggleGroup();
-    radioButtonCodificacaoBinaria.setToggleGroup(grupoRadioTipoDeCodificacao);
-    radioButtonManchester.setToggleGroup(grupoRadioTipoDeCodificacao);
-    radioButtonManchesterDiferencial.setToggleGroup(grupoRadioTipoDeCodificacao);
-
-    grupoRadioTipoDeEnquadramento = new ToggleGroup();
-    radioButtonContagemCaracteres.setToggleGroup(grupoRadioTipoDeEnquadramento);
-    radioButtonInsercaoBits.setToggleGroup(grupoRadioTipoDeEnquadramento);
-    radioButtonInsercaoBytes.setToggleGroup(grupoRadioTipoDeEnquadramento);
-    radioButtonViolacaoCamadaFisica.setToggleGroup(grupoRadioTipoDeEnquadramento);
+    boxTipoCodificacao.setItems(FXCollections.observableArrayList("Binaria","Manchester","Manchester Diferencial"));
+    boxTipoEnquadramento.setItems(FXCollections.observableArrayList("Contagem de Caracteres","Inserção de bytes", "Inserção de bits", "Violação de codificação da camada física"));
+    boxTipoCodificacao.getSelectionModel().selectFirst();
+    boxTipoEnquadramento.getSelectionModel().selectFirst();
     
     instanciarCamadas();
    
@@ -197,23 +176,17 @@ public class PrincipalController implements Initializable {
   @FXML
   void handleButtonEnviar(ActionEvent event) {
     if(buttonEnviar.getText().equals("Enviar")) {
-      if(grupoRadioTipoDeCodificacao.getSelectedToggle() != null && grupoRadioTipoDeEnquadramento.getSelectedToggle() != null  && !textAreaTransmissor.getText().equals("")) {
+      if(boxTipoCodificacao.getValue() != null && boxTipoEnquadramento.getValue() != null  && !textAreaTransmissor.getText().equals("")) {
         labelAviso.setVisible(false);
         imageDemarcacaoSinais.setVisible(true);
         buttonEnviar.setText("Aguarde");
+        System.out.println("Tipo de codificação: " + tipoDeCodificacao);
+        System.out.println("Tipo de enquadramento: " + tipoDeEnquadramento);
         aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao, tipoDeEnquadramento);
         buttonEnviar.setStyle("-fx-background-color:  #E1AF00"); // button fica amarelo
         textAreaTransmissor.setEditable(false); // nao permite editar
-        radioButtonCodificacaoBinaria.setDisable(true);
-        radioButtonManchester.setDisable(true);
-        radioButtonManchesterDiferencial.setDisable(true);
-        
-        radioButtonContagemCaracteres.setDisable(true);
-        radioButtonInsercaoBytes.setDisable(true);
-        radioButtonInsercaoBits.setDisable(true);
-        radioButtonViolacaoCamadaFisica.setDisable(true);
-        
-
+        boxTipoCodificacao.setDisable(true);
+        boxTipoEnquadramento.setDisable(true);
       } else { // nao selecionou uma codificacao ou digitou no text area
         labelAviso.setVisible(true);
       }
@@ -223,16 +196,11 @@ public class PrincipalController implements Initializable {
       textAreaTransmissor.setText("");
       textAreaReceptor.setText("");
       imageDemarcacaoSinais.setVisible(false);
-      grupoRadioTipoDeCodificacao.selectToggle(null);
       buttonEnviar.setStyle("-fx-background-color:  #1cb241"); // button fica verde
       textAreaTransmissor.setEditable(true); // permite editar
-      radioButtonCodificacaoBinaria.setDisable(false);
-      radioButtonManchester.setDisable(false);
-      radioButtonManchesterDiferencial.setDisable(false);
-      radioButtonContagemCaracteres.setDisable(false);
-      radioButtonInsercaoBytes.setDisable(false);
-      radioButtonInsercaoBits.setDisable(false);
-      radioButtonViolacaoCamadaFisica.setDisable(false);
+      boxTipoCodificacao.setDisable(false);
+      boxTipoEnquadramento.setDisable(false);
+
     }
 
   } // fim metodo handleButtonEnviar
@@ -244,39 +212,45 @@ public class PrincipalController implements Initializable {
     });
 
   }
+  
+  
   @FXML
-  void handleButtonCodificacaoBinaria(ActionEvent event) {
-    tipoDeCodificacao = 0;
+  public void handleTipoCodificacao(ActionEvent event ) {
+    System.out.println("Entrou no handleTipoCodificacao");
+    if(boxTipoCodificacao.getValue() != null) {
+      switch(boxTipoCodificacao.getValue()) {
+        case "Binaria":
+          tipoDeCodificacao = 0;
+          break;
+        case "Manchester":
+          tipoDeCodificacao = 1;
+          break;
+        case "Manchester Diferencial":
+          tipoDeCodificacao = 2;
+          break;
+      }
+    }
   }
 
   @FXML
-  void handleButtonManchester(ActionEvent event) {
-    tipoDeCodificacao = 1;
-  }
-
-  @FXML
-  void handleButtonManchesterDiferencial(ActionEvent event) {
-    tipoDeCodificacao = 2;
-  }
-  
-  @FXML
-  void handleButtonContagemCaracteres(ActionEvent event) {
-    tipoDeEnquadramento = 0;
-  }
-  
-  @FXML
-  void handleButtonInsercaoBytes(ActionEvent event) {
-    tipoDeEnquadramento = 1;
-  }
-  
-  @FXML
-  void handleButtonInsercaoBits(ActionEvent event) {
-    tipoDeEnquadramento = 2;
-  }
-
-  @FXML
-  void handleButtonViolacaoCamadaFisica(ActionEvent event) {
-    tipoDeEnquadramento = 3;
+  public void handleTipoEnquadramento(ActionEvent event ) {
+    System.out.println("Entrou no handleTipoEnquadramento");
+    if(boxTipoEnquadramento.getValue() != null) {
+      switch(boxTipoEnquadramento.getValue()) {
+        case "Contagem de Caracteres":
+          tipoDeEnquadramento = 0;
+          break;
+        case "Inserção de bytes":
+          tipoDeEnquadramento = 1;
+          break;
+        case "Inserção de bits":
+          tipoDeEnquadramento = 2;
+          break;
+        case "Violação de codificação da camada física":
+          tipoDeEnquadramento = 3;
+          break;
+      }
+    }
   }
   
   public void exibirMensagemReceptor(String mensagem){
@@ -292,17 +266,31 @@ public class PrincipalController implements Initializable {
     int[] copiaQuadro = Arrays.copyOf(quadro, quadro.length);   
     
     new Thread(() -> {
-      for (int k = 0; k < copiaQuadro.length; k++) {
+      int contadorBitsNull = 0;
+      boolean sairLoopExterno = false;
+      
+      for (int k = 0; k < copiaQuadro.length && !sairLoopExterno; k++) {
         int displayMask = 1 << 31; // 10000000 00000000 00000000 0000000
         
         for (int i = 1; i <= 32 ; i++) { // da direita para esquerda.
+                    
+          if(i%8 == 0 && contadorBitsNull == 7) {
+            System.out.println("O byte é null");
+            sairLoopExterno = true;
+            break;
+          } else if(i%8 == 0) {
+            System.out.println("Zeramos o contador Bits Null");
+            contadorBitsNull = 0;
+          }
+
           if((copiaQuadro[k] & displayMask) == 0) {
             listSinaisResultado.add(0, 0);
+            ++contadorBitsNull;
           } else {
             listSinaisResultado.add(0, 1);
           }
           copiaQuadro[k] <<= 1;    
-        
+
           for (int value = 0; value <= listSinaisResultado.size() - 1; value++) {
             if(listSinaisResultado.get(value) == 0) {
               arraySinaisBaixos[value].setVisible(true);
@@ -314,7 +302,7 @@ public class PrincipalController implements Initializable {
           }
         
           try {
-            Thread.sleep(100);
+             Thread.sleep(100);
           } catch(InterruptedException e) {}
         
           if (listSinaisResultado.size() - 1 == 7) {
