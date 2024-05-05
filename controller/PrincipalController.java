@@ -2,14 +2,13 @@
 * Autor............: Edson Araujo de Souza Neto
 * Matricula........: 202210169
 * Inicio...........: 01/04/2024
-* Ultima alteracao.: 07/04/2024
+* Ultima alteracao.: 05/05/2024
 * Nome.............: principalController
 * Funcao...........: manipula a gui do usuario, instancia as camadas e executa as mesmas.
 *************************************************************** */
 
 package controller;
 
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +37,9 @@ public class PrincipalController implements Initializable {
 
   @FXML
   private Label labelAviso;
-      
+  @FXML
+  private Label labelAvisoEnquadramento;      
+  
   @FXML
   private Button buttonEnviar;
 
@@ -117,20 +118,22 @@ public class PrincipalController implements Initializable {
   @FXML
   private TextArea textAreaTransmissor;
   
-  AplicacaoTransmissora aplicacaoTransmissora;
-  CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
-  CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora;
-  CamadaFisicaTransmissora camadaFisicaTransmissora;
+  private AplicacaoTransmissora aplicacaoTransmissora;
+  private CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
+  private CamadaEnlaceDadosTransmissora camadaEnlaceDadosTransmissora;
+  private CamadaFisicaTransmissora camadaFisicaTransmissora;
   
-  MeioDeComunicacao meioDeComunicacao;
+  private MeioDeComunicacao meioDeComunicacao;
   
-  CamadaFisicaReceptora camadaFisicaReceptora;
-  CamadaAplicacaoReceptora camadaAplicacaoReceptora;
-  CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora;
-  AplicacaoReceptora aplicacaoReceptora;
+  private CamadaFisicaReceptora camadaFisicaReceptora;
+  private CamadaAplicacaoReceptora camadaAplicacaoReceptora;
+  private CamadaEnlaceDadosReceptora camadaEnlaceDadosReceptora;
+  private AplicacaoReceptora aplicacaoReceptora;
   
-  int tipoDeCodificacao = -1;
-  int tipoDeEnquadramento = -1;
+  private int tipoDeCodificacao = -1;
+  private int tipoDeEnquadramento = -1;
+  
+  private String mensagem = "";
   
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -139,10 +142,36 @@ public class PrincipalController implements Initializable {
     boxTipoCodificacao.getSelectionModel().selectFirst();
     boxTipoEnquadramento.getSelectionModel().selectFirst();
     
+    buttonEnviar.setOnMouseEntered(event -> {
+      buttonEnviar.setStyle("-fx-background-color: #16782e");
+      buttonEnviar.setCursor(javafx.scene.Cursor.HAND);
+    });
+
+    buttonEnviar.setOnMouseExited(event -> {
+      buttonEnviar.setStyle("-fx-background-color: #1cb241");
+      buttonEnviar.setCursor(javafx.scene.Cursor.DEFAULT);
+    });
+    
+    boxTipoCodificacao.setOnMouseEntered(event -> {
+      boxTipoCodificacao.setCursor(javafx.scene.Cursor.HAND);
+    });
+    boxTipoCodificacao.setOnMouseExited(event -> {
+      boxTipoCodificacao.setCursor(javafx.scene.Cursor.DEFAULT);
+    });
+    
+    boxTipoEnquadramento.setOnMouseEntered(event -> {
+      boxTipoEnquadramento.setCursor(javafx.scene.Cursor.HAND);
+    });
+    boxTipoEnquadramento.setOnMouseExited(event -> {
+       boxTipoEnquadramento.setCursor(javafx.scene.Cursor.DEFAULT);
+    });
+   
+    
     instanciarCamadas();
    
   } // fim metodoInitialize
   
+
   public void instanciarCamadas() {
     aplicacaoTransmissora = new AplicacaoTransmissora();
     camadaAplicacaoTransmissora = new CamadaAplicacaoTransmissora();
@@ -177,46 +206,66 @@ public class PrincipalController implements Initializable {
   void handleButtonEnviar(ActionEvent event) {
     if(buttonEnviar.getText().equals("Enviar")) {
       if(boxTipoCodificacao.getValue() != null && boxTipoEnquadramento.getValue() != null  && !textAreaTransmissor.getText().equals("")) {
-        labelAviso.setVisible(false);
-        imageDemarcacaoSinais.setVisible(true);
-        buttonEnviar.setText("Aguarde");
-        System.out.println("Tipo de codificação: " + tipoDeCodificacao);
-        System.out.println("Tipo de enquadramento: " + tipoDeEnquadramento);
-        aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao, tipoDeEnquadramento);
-        buttonEnviar.setStyle("-fx-background-color:  #E1AF00"); // button fica amarelo
-        textAreaTransmissor.setEditable(false); // nao permite editar
-        boxTipoCodificacao.setDisable(true);
-        boxTipoEnquadramento.setDisable(true);
-      } else { // nao selecionou uma codificacao ou digitou no text area
+        if(boxTipoCodificacao.getValue().equals("Binaria") && boxTipoEnquadramento.getValue().equals("Violação de codificação da camada física")) {
+          labelAvisoEnquadramento.setVisible(true);
+          labelAviso.setVisible(false);
+        } else {
+          textAreaReceptor.setText("");
+          labelAvisoEnquadramento.setVisible(false);
+          labelAviso.setVisible(false);
+          imageDemarcacaoSinais.setVisible(true);
+          buttonEnviar.setText("Aguarde");
+          buttonEnviar.setStyle("-fx-background-color:  #E1AF00"); // button fica amarelo
+          textAreaTransmissor.setEditable(false); // nao permite editar
+          boxTipoCodificacao.setDisable(true);
+          boxTipoEnquadramento.setDisable(true);   
+          
+          aplicacaoTransmissora.enviarDado(textAreaTransmissor.getText(), tipoDeCodificacao, tipoDeEnquadramento);
+       
+        }
+
+      } else { // nao digitou
+        labelAvisoEnquadramento.setVisible(false);
         labelAviso.setVisible(true);
       }
-    } else if(buttonEnviar.getText().equals("Reiniciar")) { // reiniciar
+    } 
+  } // fim metodo handleButtonEnviar
+  
+  public static void limparTerminal() {
+    // Verifica se o sistema operacional é Windows
+    if (System.getProperty("os.name").contains("Windows")) {
+      // Se for, utiliza o comando "cls"
+      try {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else {
+      // Se não for Windows, utiliza o comando "clear"
+      System.out.print("\033[H\033[2J");
+      System.out.flush();
+    }
+  }
+  
+  public void possibilitarReiniciar() {
+    Platform.runLater(()-> {
+      textAreaReceptor.setText(mensagem);
+      limparTerminal();
       instanciarCamadas();
       buttonEnviar.setText("Enviar");
       textAreaTransmissor.setText("");
-      textAreaReceptor.setText("");
       imageDemarcacaoSinais.setVisible(false);
       buttonEnviar.setStyle("-fx-background-color:  #1cb241"); // button fica verde
       textAreaTransmissor.setEditable(true); // permite editar
       boxTipoCodificacao.setDisable(false);
       boxTipoEnquadramento.setDisable(false);
-
-    }
-
-  } // fim metodo handleButtonEnviar
-  
-  public void possibilitarReiniciar() {
-    Platform.runLater(()-> {
-      buttonEnviar.setText("Reiniciar");
-      buttonEnviar.setStyle("-fx-background-color:  #594D41");     
+      
     });
-
   }
   
   
   @FXML
   public void handleTipoCodificacao(ActionEvent event ) {
-    System.out.println("Entrou no handleTipoCodificacao");
     if(boxTipoCodificacao.getValue() != null) {
       switch(boxTipoCodificacao.getValue()) {
         case "Binaria":
@@ -234,7 +283,6 @@ public class PrincipalController implements Initializable {
 
   @FXML
   public void handleTipoEnquadramento(ActionEvent event ) {
-    System.out.println("Entrou no handleTipoEnquadramento");
     if(boxTipoEnquadramento.getValue() != null) {
       switch(boxTipoEnquadramento.getValue()) {
         case "Contagem de Caracteres":
@@ -253,8 +301,8 @@ public class PrincipalController implements Initializable {
     }
   }
   
-  public void exibirMensagemReceptor(String mensagem){
-    textAreaReceptor.setText(mensagem);
+  public void setMensagemReceptor(String mensagem){
+    this.mensagem = mensagem;
   }
   
   public void exibirSinaisBinarios(int quadro[]){
@@ -275,11 +323,9 @@ public class PrincipalController implements Initializable {
         for (int i = 1; i <= 32 ; i++) { // da direita para esquerda.
                     
           if(i%8 == 0 && contadorBitsNull == 7) {
-            System.out.println("O byte é null");
             sairLoopExterno = true;
             break;
           } else if(i%8 == 0) {
-            System.out.println("Zeramos o contador Bits Null");
             contadorBitsNull = 0;
           }
 

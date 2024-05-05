@@ -14,7 +14,8 @@ public class AplicacaoReceptora {
   PrincipalController principalController;
   
   public void receberDado(String mensagem) {
-    principalController.exibirMensagemReceptor(mensagem);
+    System.out.println("\nNa AplicaçãoReceptora \nPalavra: " + mensagem);
+    principalController.setMensagemReceptor(mensagem);
   }
   
   public void setPrincipalController(PrincipalController principalController){

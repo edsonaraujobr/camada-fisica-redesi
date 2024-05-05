@@ -1,15 +1,24 @@
+/* ***************************************************************
+* Autor............: Edson Araujo de Souza Neto
+* Matricula........: 202210169
+* Inicio...........: 28/04/2024
+* Ultima alteracao.: 05/05/2024
+* Nome.............: CamadaEnlaceDadosTransmissora
+* Funcao...........: Neste momento, apenas enquadra os bits de acordo com o tipo de enquadramento escolhido.
+*************************************************************** */
+
+
 package model.transmissor;
 
 public class CamadaEnlaceDadosTransmissora {
   
   CamadaFisicaTransmissora camadaFisicaTransmissora;
-
+  
   public void enviarDado(int quadro [], int tipoDeCodificacao, int tipoDeEnquadramento) {
     int quadroEnquadrado[] = enquadramento(quadro, tipoDeEnquadramento);
 
-    System.out.println("Na camada Enlace de Dados Transmissora");
+    System.out.println("\nNa camada Enlace de Dados Transmissora");
     for(int i = 0; i < quadroEnquadrado.length; i++) {
-      System.out.println("QuadroEnquadrado: "+ i);
       imprimirBits(quadroEnquadrado[i]);
       System.out.println();
     }
@@ -41,7 +50,7 @@ public class CamadaEnlaceDadosTransmissora {
         quadroEnquadrado = insercaoDeBits(quadro);
         break;
       case 3 : //violacao da camada fisica
-        quadroEnquadrado = violacaoCamadaFisica(quadro);
+        quadroEnquadrado = violacaoCamadaFisica(quadro); // retorna o proprio quadro(implementado na Camada Fisica)
         break;
     }//fim do switch/case
     
@@ -108,53 +117,8 @@ public class CamadaEnlaceDadosTransmissora {
   
   }
   
-  /*public int calcularQuadroInsercaoBytes(int quadro []) {
-    int quadroAuxiliar [] = quadro;
-    int contadorTamanhoBytes = 0;
-    int contadorQuadros = 0;
-    int contadorBitsNull = 0;
-    char resultado;
-    int displayMask = 1 << 31; 
-    int byteAtual = 0;      
-      
-    for(int i = 0; i < quadro.length * 32; i++) {
-      
-      if ((quadroAuxiliar[contadorQuadros] & displayMask) != 0) { // eh 1
-        byteAtual = (byteAtual << 1) | 1;
-      } else {
-        byteAtual = (byteAtual << 1) | 0;
-        ++contadorBitsNull;
-      }
-      quadroAuxiliar[contadorQuadros] <<= 1; 
-      
-      if((i + 1) % 8 == 0) {
-        if(contadorBitsNull == 8) {
-          break;
-        } else {
-          contadorBitsNull = 0;
-          
-          resultado = (char) byteAtual;
-          if(resultado == 'S' || resultado == 'E' || resultado == '|' ) {
-            contadorTamanhoBytes += 2;
-          } else {
-            ++contadorTamanhoBytes;
-          }
-          byteAtual = 0;
-        }
-
-      } 
-      if((i+1)% 32 == 0) {
-        ++contadorQuadros;
-      }
-    }
-    
-    int contadorTamanhoNovoQuadro =(contadorTamanhoBytes*2 % 4 == 0 ? contadorTamanhoBytes*2 / 4 : (contadorTamanhoBytes*2 / 4) + 1);   // 2 dos caracteres START e END, 4 pois em um quadro vou por quatro caracteres contando o de controle.
-    return contadorTamanhoNovoQuadro;
-  }*/
-  
   public int [] insercaoDeBytes (int quadro []) {
     int novoQuadro [] = new int[quadro.length * 4]; // pior dos casos 
-    System.out.println("O tamanho do quadro é: " + novoQuadro.length);
     
     int displayMask = 1 << 31; 
     int contadorIndexQuadroNovo = 0;
@@ -178,7 +142,6 @@ public class CamadaEnlaceDadosTransmissora {
 
       
       if((y+1) % 8 == 0) { // li um byte
-        System.out.println("Resultado Bits: " + resultadoBits);
         if(resultadoBits.equals("00000000")) { // li um byte vazio
           break;
         }
@@ -323,53 +286,108 @@ public class CamadaEnlaceDadosTransmissora {
           ++index;
         }      
     }
-    
-    
-
-    // digitar u
-    // S u E // 1 quadro
-    
-    // digitar ue
-    // S u e E // 1 quadro
-    
-    // digitar ues
-    // S u e s
-    // E // dous quadros
-    
-    // digitar uesb
-    // S u e s
-    // b E // dois quadros
-    
-    // digitar S
-    // S | S E // 1 quadro
-    
-    // digitar SS
-    // S | S |
-    // S E // dois quadros
-    
-    // Digitar SSS
-    // S | S | 
-    // S | S E // dois quadros
-    
-    // digitar SSSS
-    // S | S | 
-    // S | S |
-    // S E // três quadros
-    
-    
-    
-    
     return novoQuadro;
   }
   
-  public int [] insercaoDeBits (int quadro []) {
-    int quadro2[] = {1,2};
-    return quadro2;   
+  public int [] insercaoDeBits (int quadroRecebido []) {
+    int quadroEnquadrado[] = new int [quadroRecebido.length * 2];
+    
+    int posicao = 31;
+    int displayMask = 1 << 31; 
+    String resultadoBits = "";
+    int contadorIndexQuadroEnquadrado = 0;
+    String saidaResultadoBits = "";
+    int contadorBits = 0;
+    String byteFlag = "01111110";
+    int contadorCaractere = 0;
+    
+    for(int i = 0; i < 8; i++) {
+      if(byteFlag.charAt(i) == '1') {
+        quadroEnquadrado[contadorIndexQuadroEnquadrado] |= (1 << posicao); 
+      }
+      --posicao;
+    }
+    
+    for(int i = 0; i < quadroRecebido.length; i++) {
+      for(int y = 0; y < 32; y++) {
+        if ((quadroRecebido[i] & displayMask) != 0) { // eh 1
+          resultadoBits += "1";
+        } else { // eh 0
+          resultadoBits += "0";
+        }
+        quadroRecebido[i] <<= 1;
+        
+        if((y+1) % 8 == 0) {
+          if(resultadoBits.equals("00000000")) {
+            break;
+          }
+          ++contadorCaractere;
+          int contadorBitUm = 0;
+          for(int x = 0; x < 8; x++) { // for para verificar a sequencia de bits
+            
+            if(resultadoBits.charAt(x) == '1') {
+              ++contadorBitUm;
+              if(contadorBitUm == 6) {
+                contadorBits += 2;
+                saidaResultadoBits += "01";
+              } else {
+                ++contadorBits;
+                saidaResultadoBits += "1";
+              }
+            } else {
+              saidaResultadoBits += "0";
+              contadorBitUm = 0;
+            }
+          } // fim for 8 bits
+          
+          for(int x = 0; x < saidaResultadoBits.length(); x++) { // for para inserir os bits
+            if(saidaResultadoBits.charAt(x) == '1') {
+              quadroEnquadrado[contadorIndexQuadroEnquadrado] |= (1 << posicao); 
+            } 
+            --posicao;
+            if(posicao == -1) {
+              posicao = 31;
+              ++contadorIndexQuadroEnquadrado;
+            }            
+          }
+          
+          if(contadorCaractere == 2) {
+            contadorBits = 0;
+            contadorCaractere = 0;
+            for(int z = 0; z < 8; z++) {
+              if(byteFlag.charAt(z) == '1') {
+                quadroEnquadrado[contadorIndexQuadroEnquadrado] |= (1 << posicao); 
+              }
+              --posicao;
+              if(posicao == -1) {
+                posicao = 31;
+                ++contadorIndexQuadroEnquadrado;
+              } 
+            }
+          }
+          saidaResultadoBits = "";
+          resultadoBits = "";
+        } // fim % 8
+
+
+      } // fim for 16 bits
+ 
+    } // fim for quadro
+    if(contadorCaractere > 0) {
+      for(int i = 0; i < 8; i++) {
+        if(byteFlag.charAt(i) == '1') {
+          quadroEnquadrado[contadorIndexQuadroEnquadrado] |= (1 << posicao); 
+        }
+        --posicao;
+      }
+    }
+    
+    return quadroEnquadrado;   
   }
   
   public int [] violacaoCamadaFisica(int quadro []) {
-    int quadro2[] = {1,2};
-    return quadro2;   
+    // implementado na camada Física
+    return quadro;
   }
   
   public void controleDeErro(int quadro []) {

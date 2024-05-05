@@ -14,6 +14,7 @@ public class AplicacaoTransmissora {
   CamadaAplicacaoTransmissora camadaAplicacaoTransmissora;
 
   public void enviarDado (String mensagem, int tipoDeCodificacao, int tipoEnquadramento ) {
+    System.out.println("Na AplicaçãoTransmissora \nPalavra: " + mensagem);
     camadaAplicacaoTransmissora.enviarDado(mensagem, tipoDeCodificacao, tipoEnquadramento);
   }
   

@@ -2,7 +2,7 @@
 * Autor............: Edson Araujo de Souza Neto
 * Matricula........: 202210169
 * Inicio...........: 01/04/2024
-* Ultima alteracao.: 07/04/2024
+* Ultima alteracao.: 05/05/2024
 * Nome.............: CamadaAplicacaoTransmissora
 * Funcao...........: Transforma uma string em bits.
 *************************************************************** */
@@ -19,7 +19,6 @@ public class CamadaAplicacaoTransmissora {
     String stringDeBits = transformarCaracteresEmStringDeBits(arrayCaracteres);
     
     for(int i = 0; i < quadro.length; i++) {
-      System.out.println("Quadro: " + quadro[i]);
       quadro[i] = inserirBitBinario(stringDeBits, quadro[i]);
 
       if(stringDeBits.length() > 32) { // remover da variavel String para ser lida na próxima iteração.
@@ -27,9 +26,8 @@ public class CamadaAplicacaoTransmissora {
       }
     }   
     
-    System.out.println("Na camada Aplicação Transmissora");
+    System.out.println("\nNa camada Aplicação Transmissora");
     for(int i = 0; i < quadro.length; i++) {
-      System.out.println("Quadro: "+ i);
       imprimirBits(quadro[i]);
       System.out.println();
     }

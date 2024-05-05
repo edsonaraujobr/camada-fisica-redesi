@@ -2,7 +2,7 @@
 * Autor............: Edson Araujo de Souza Neto
 * Matricula........: 202210169
 * Inicio...........: 01/04/2024
-* Ultima alteracao.: 07/04/2024
+* Ultima alteracao.: 05/05/2024
 * Nome.............: CamadaAplicacaoReceptora
 * Funcao...........: Transforma os bits em uma string de acordo com a codificacao.
 *************************************************************** */

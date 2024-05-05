@@ -1,3 +1,12 @@
+/* ***************************************************************
+* Autor............: Edson Araujo de Souza Neto
+* Matricula........: 202210169
+* Inicio...........: 28/04/2024
+* Ultima alteracao.: 05/05/2024
+* Nome.............: CamadaEnlaceDadosReceptora
+* Funcao...........: Neste momento, apenas enquadra os bits de acordo com o tipo de enquadramento escolhido.
+*************************************************************** */
+
 package model.receptor;
 
 public class CamadaEnlaceDadosReceptora {
@@ -7,7 +16,7 @@ public class CamadaEnlaceDadosReceptora {
   public void receberDado(int quadro [], int tipoDeEnquadramento) {
     int quadroDesenquadrado [] = enquadramento(quadro, tipoDeEnquadramento);
     
-    System.out.println("Na camada Enlace de Dados Receptora");
+    System.out.println("\nNa camada Enlace de Dados Receptora");
     for(int i = 0; i < quadroDesenquadrado.length; i++) {
       System.out.println("QuadroDesenquadrado: "+ i);
       imprimirBits(quadroDesenquadrado[i]);
@@ -101,14 +110,13 @@ public class CamadaEnlaceDadosReceptora {
       for(int i = 0; i < 32 && !byteEnd; i++) {
         
         if ((quadro[y] & displayMask) != 0) { // eh 1
-        resultadoBits += "1";
+          resultadoBits += "1";
         } else { // eh 0
           resultadoBits += "0";
         }
         quadro[y] <<=1;
         
         if((i+1) % 8 == 0) { // li um byte 
-          System.out.println("Resultado dos bits: " + resultadoBits);
           if(resultadoBits.equals("00000000")) { // li um byte vazio
             resultadoBits = "";
             byteEnd = true;
@@ -157,7 +165,6 @@ public class CamadaEnlaceDadosReceptora {
               for(int pos = 0; pos < 8; pos++) { 
                 if(resultadoBits.charAt(pos) == '1')
                   novoQuadro[contadorNovoQuadro] |= (1 << passo);
-                System.out.println("Passo: " + passo);
                 --passo;
               }    
               break;
@@ -176,14 +183,68 @@ public class CamadaEnlaceDadosReceptora {
     return novoQuadro;  
   }
   
-  public int [] insercaoDeBits (int quadro []) {
-     int quadro2[] = {1,2};
-    return quadro2;   
+  public int [] insercaoDeBits (int quadroRecebido []) {
+    int quadroDesenquadrado [] = new int[quadroRecebido.length / 2];
+    
+    int contadorCaractere = 0;
+    int displayMask = 1 << 31;  
+    String resultadoBits = "";
+    int indexQuadroDesenquadrado = 0;
+    int posicao = 31;
+    String byteFlag = "";
+    boolean byteNulo = false;
+    
+    for(int i = 0; i < quadroRecebido.length && !byteNulo; i++) {
+      for(int y = 0; y < 32 && !byteNulo; y++) {
+        
+        if ((quadroRecebido[i] & displayMask) != 0) { // eh 1
+          resultadoBits += "1";
+        } else { // eh 0
+          resultadoBits += "0";
+        }
+        quadroRecebido[i] <<=1;
+        
+        if((y+1) % 8 == 0) {
+            switch(resultadoBits) {
+              case "00000000":
+                resultadoBits = "";
+                byteNulo = true;
+                break;
+
+              case "01111110":
+                resultadoBits = "";
+                break;
+        
+              default:
+                ++contadorCaractere;
+                for(int x = 0; x < 8; x++) {
+                  if(resultadoBits.charAt(x) == '1') {
+                    quadroDesenquadrado[indexQuadroDesenquadrado] |= (1 << posicao); 
+                  }
+                  --posicao;
+                }
+                resultadoBits = "";
+                break;
+            }
+
+          
+          if(contadorCaractere == 4) {
+            contadorCaractere = 0;
+            posicao = 31;
+            ++indexQuadroDesenquadrado;
+          }
+        }
+      }
+    } // fim for 32 bits
+  
+    
+      
+    return quadroDesenquadrado;   
   }
   
   public int [] violacaoCamadaFisica(int quadro []) {
-     int quadro2[] = {1,2};
-    return quadro2;   
+    // implementado na camada fisica
+    return quadro;
   }
   
   public void controleDeErro(int quadro []) {
